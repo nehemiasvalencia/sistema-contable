@@ -109,12 +109,13 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(58, 58, 58)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblBienvenida)
-                            .addComponent(lblTitulo)))
+                        .addComponent(lblTitulo))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
+                        .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addComponent(lblBienvenida))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(btnProductos)
@@ -134,14 +135,14 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
                             .addComponent(btnConfiguracion)
                             .addComponent(btnCerrarSesion)
                             .addComponent(btnEmpresa))))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(lblTitulo)
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblBienvenida)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDashboard)
@@ -165,11 +166,11 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
                 .addComponent(brnHistorial)
                 .addGap(9, 9, 9)
                 .addComponent(btnEmpresa)
-                .addGap(35, 35, 35)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnConfiguracion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCerrarSesion)
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -230,8 +231,18 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
 
         // Botones del menú
         JButton[] botonesMenu = {
-            btnDashboard, btnUsuarios, btnCuentas, btnAsientos,
-            btnOperaciones, btnProductos, btnReportes, btnConfiguracion
+            btnDashboard,
+            btnUsuarios,
+            btnCuentas,
+            btnAsientos,
+            btnOperaciones,
+            btnProductos,
+            btnReportes,
+            btnConfiguracion,
+            btnEmpresa,
+            btnImpuestos,
+            btnPeríodosContables,
+            brnHistorial
         };
 
         // Aplicar estilos a cada botón del menú

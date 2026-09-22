@@ -30,7 +30,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
 
         setTitle("Sistema Contable");
 
-        setSize(1100, 700);
+        setSize(1200, 800);
         setMinimumSize(new java.awt.Dimension(1100, 700));
         setLocationRelativeTo(null);
 
@@ -108,11 +108,11 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         panelContenido.setLayout(panelContenidoLayout);
         panelContenidoLayout.setHorizontalGroup(
             panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 896, Short.MAX_VALUE)
+            .addGap(0, 920, Short.MAX_VALUE)
         );
         panelContenidoLayout.setVerticalGroup(
             panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 927, Short.MAX_VALUE)
+            .addGap(0, 963, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
