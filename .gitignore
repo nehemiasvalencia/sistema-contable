@@ -1,0 +1,15 @@
+# NetBeans
+/nbproject/private/
+/build/
+/dist/
+/.nb-gradle/
+
+# Compiled files
+*.class
+
+# Maven
+/target/
+
+# IDE
+.idea/
+*.iml
