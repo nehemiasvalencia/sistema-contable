@@ -17,7 +17,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import vistas.FrmAdministrador.FrmCuentas;
+import vistas.FrmAdministrador.FrmEmpresa;
+import vistas.FrmAdministrador.FrmImpuestos;
 import vistas.FrmAdministrador.FrmPeriodos;
+import vistas.FrmAdministrador.FrmProductos;
 import vistas.FrmMenuPrincipal;
 import vistas.FrmLogin;
 import vistas.FrmAdministrador.FrmUsuarios;
@@ -102,6 +105,7 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
         brnHistorial.setText("Historial");
 
         btnEmpresa.setText("Empresa");
+        btnEmpresa.addActionListener(this::btnEmpresaActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -184,7 +188,10 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        // TODO add your handling code here:
+        FrmProductos frmProductos
+                = new FrmProductos(usuario, menuPrincipal);
+
+        menuPrincipal.mostrarVentana(frmProductos);
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -196,7 +203,10 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnImpuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImpuestosActionPerformed
-        // TODO add your handling code here:
+         FrmImpuestos frmImpuestos
+                = new FrmImpuestos(usuario, menuPrincipal);
+
+        menuPrincipal.mostrarVentana(frmImpuestos);
     }//GEN-LAST:event_btnImpuestosActionPerformed
 
     private void btnCuentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentasActionPerformed
@@ -212,6 +222,13 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
 
         menuPrincipal.mostrarVentana(frmPeriodos);
     }//GEN-LAST:event_btnPeríodosContablesActionPerformed
+
+    private void btnEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpresaActionPerformed
+        FrmEmpresa frmEmpresa
+                = new FrmEmpresa(usuario, menuPrincipal);
+
+        menuPrincipal.mostrarVentana(frmEmpresa);
+    }//GEN-LAST:event_btnEmpresaActionPerformed
 
     public void initializeComponents() {
         // 1. Fondo general neutro y limpio
