@@ -4,6 +4,17 @@
  */
 package vistas.FrmAdministrador;
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
 
@@ -18,6 +29,7 @@ public class FrmCuentas extends javax.swing.JPanel {
      */
     public FrmCuentas(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
         initComponents();
+        initializeComponents();
     }
 
     /**
@@ -31,6 +43,7 @@ public class FrmCuentas extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jOptionPane1 = new javax.swing.JOptionPane();
         jLabel1 = new javax.swing.JLabel();
         lblCodigo = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
@@ -45,8 +58,6 @@ public class FrmCuentas extends javax.swing.JPanel {
         lblEstado = new javax.swing.JLabel();
         cmbEstado = new javax.swing.JComboBox<>();
         lblDescripcion = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtDescripcion = new javax.swing.JTextArea();
         btnNuevo = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
@@ -56,6 +67,12 @@ public class FrmCuentas extends javax.swing.JPanel {
         btnBuscar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblCuentas = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        lblClasificacion = new javax.swing.JLabel();
+        cmbClasificacion = new javax.swing.JComboBox<>();
+        lblRoles = new javax.swing.JLabel();
+        cmbRoles = new javax.swing.JComboBox<>();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -86,10 +103,6 @@ public class FrmCuentas extends javax.swing.JPanel {
 
         lblDescripcion.setText("Descripcion");
 
-        txtDescripcion.setColumns(20);
-        txtDescripcion.setRows(5);
-        jScrollPane2.setViewportView(txtDescripcion);
-
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(this::btnNuevoActionPerformed);
 
@@ -119,10 +132,36 @@ public class FrmCuentas extends javax.swing.JPanel {
         ));
         jScrollPane3.setViewportView(tblCuentas);
 
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane4.setViewportView(jTextArea2);
+
+        lblClasificacion.setText("Clasificacion ");
+
+        cmbClasificacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        lblRoles.setText("Rol en el Reporte");
+
+        cmbRoles.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(39, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblBuscar)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtBuscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBuscar)
+                        .addGap(82, 82, 82))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -151,7 +190,18 @@ public class FrmCuentas extends javax.swing.JPanel {
                                 .addGap(77, 77, 77)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblCuentaPadre)
-                                    .addComponent(jLabel1)))
+                                    .addComponent(jLabel1)
+                                    .addComponent(lblClasificacion)
+                                    .addComponent(cmbRoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(77, 77, 77)
+                                    .addComponent(cmbClasificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(34, 34, 34))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lblRoles)
+                                    .addGap(18, 18, 18)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(66, 66, 66)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,9 +211,6 @@ public class FrmCuentas extends javax.swing.JPanel {
                                     .addComponent(cmbCuentaPadre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -172,21 +219,11 @@ public class FrmCuentas extends javax.swing.JPanel {
                         .addComponent(btnEditar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnLimpiar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(251, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(39, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblBuscar)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar)
-                        .addGap(82, 82, 82))))
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,13 +231,21 @@ public class FrmCuentas extends javax.swing.JPanel {
                 .addGap(17, 17, 17)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblCodigo)
-                .addGap(5, 5, 5)
-                .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCodigo)
+                    .addComponent(lblClasificacion))
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbClasificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblNombre)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNombre)
+                    .addComponent(lblRoles))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbRoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTipo)
@@ -219,9 +264,9 @@ public class FrmCuentas extends javax.swing.JPanel {
                     .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDescripcion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
                     .addComponent(btnGuardar)
@@ -234,9 +279,235 @@ public class FrmCuentas extends javax.swing.JPanel {
                     .addComponent(btnBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void initializeComponents() {
+    // 1. Configuración de la Ventana Principal
+   
+    // 2. Encabezado (Header)
+    JPanel pnlHeader = new JPanel(new java.awt.BorderLayout());
+    pnlHeader.setBackground(new Color(15, 23, 42)); // Slate 900
+    pnlHeader.setPreferredSize(new java.awt.Dimension(1050, 60));
+    pnlHeader.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
+
+    jLabel1.setText("CATÁLOGO DE CUENTAS");
+    jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 20));
+    jLabel1.setForeground(Color.WHITE);
+    pnlHeader.add(jLabel1, java.awt.BorderLayout.CENTER);
+
+    this.add(pnlHeader, java.awt.BorderLayout.NORTH);
+
+    // 3. Contenedor Principal
+    JPanel pnlMain = new JPanel(new java.awt.BorderLayout(0, 20));
+    pnlMain.setBackground(new Color(241, 245, 249));
+    pnlMain.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
+    this.add(pnlMain, java.awt.BorderLayout.CENTER);
+
+    // -------------------------------------------------------------------------
+    // 3.1 FORMULARIO DE REGISTRO
+    // -------------------------------------------------------------------------
+    JPanel pnlForm = new JPanel(new java.awt.GridBagLayout());
+    pnlForm.setBackground(Color.WHITE);
+    pnlForm.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+            BorderFactory.createEmptyBorder(20, 25, 20, 25)
+    ));
+
+    java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+    gbc.insets = new java.awt.Insets(8, 10, 8, 10);
+    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+
+    Font fontLabel = new Font("Segoe UI", Font.BOLD, 13);
+    Color colorLabel = new Color(71, 85, 105);
+    Font fontInput = new Font("Segoe UI", Font.PLAIN, 14);
+    Color colorBgInput = new Color(248, 250, 252);
+
+    javax.swing.border.Border borderInput = BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(203, 213, 225), 1),
+            BorderFactory.createEmptyBorder(6, 10, 6, 10)
+    );
+
+    // Asignar etiquetas (incluye Clasificación y Roles)
+    lblCodigo.setText("Código de cuenta:");
+    lblNombre.setText("Nombre de la cuenta:");
+    lblTipo.setText("Tipo de cuenta:");
+    lblCuentaPadre.setText("Cuenta padre:");
+    lblNaturaleza.setText("Naturaleza:");
+    lblEstado.setText("Estado:");
+    lblClasificacion.setText("Clasificación:");
+    lblRoles.setText("Roles:");
+    lblDescripcion.setText("Descripción:");
+
+    JLabel[] labels = {
+        lblCodigo, lblNombre, lblTipo, lblCuentaPadre, 
+        lblNaturaleza, lblEstado, lblClasificacion, lblRoles, lblDescripcion
+    };
+    for (JLabel lbl : labels) {
+        lbl.setFont(fontLabel);
+        lbl.setForeground(colorLabel);
+    }
+
+    // Configurar componentes de entrada
+    Dimension dimInput = new Dimension(220, 38);
+    JComponent[] inputs = {
+        txtCodigo, txtNombre, cmbTipo, cmbCuentaPadre, 
+        cmbNaturaleza, cmbEstado, cmbClasificacion, cmbRoles
+    };
+    for (JComponent input : inputs) {
+        input.setFont(fontInput);
+        input.setBackground(colorBgInput);
+        input.setPreferredSize(dimInput);
+        if (input instanceof JTextField) {
+            input.setBorder(borderInput);
+        }
+    }
+
+    // Configuración de la Descripción (jTextArea2 dentro de jScrollPane4)
+    jTextArea2.setFont(fontInput);
+    jTextArea2.setBackground(colorBgInput);
+    jTextArea2.setLineWrap(true);
+    jTextArea2.setWrapStyleWord(true);
+    jTextArea2.setRows(3);
+
+    jScrollPane4.setViewportView(jTextArea2);
+    jScrollPane4.setBorder(borderInput);
+    jScrollPane4.setPreferredSize(new Dimension(0, 75));
+
+    // --- Distribución en GridBagLayout ---
+    // Fila 0: Código y Nombre
+    gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.0;
+    pnlForm.add(lblCodigo, gbc);
+    gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.5;
+    pnlForm.add(txtCodigo, gbc);
+
+    gbc.gridx = 2; gbc.gridy = 0; gbc.weightx = 0.0;
+    pnlForm.add(lblNombre, gbc);
+    gbc.gridx = 3; gbc.gridy = 0; gbc.weightx = 0.5;
+    pnlForm.add(txtNombre, gbc);
+
+    // Fila 1: Tipo de Cuenta y Cuenta Padre
+    gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.0;
+    pnlForm.add(lblTipo, gbc);
+    gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 0.5;
+    pnlForm.add(cmbTipo, gbc);
+
+    gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0.0;
+    pnlForm.add(lblCuentaPadre, gbc);
+    gbc.gridx = 3; gbc.gridy = 1; gbc.weightx = 0.5;
+    pnlForm.add(cmbCuentaPadre, gbc);
+
+    // Fila 2: Naturaleza y Estado
+    gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
+    pnlForm.add(lblNaturaleza, gbc);
+    gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 0.5;
+    pnlForm.add(cmbNaturaleza, gbc);
+
+    gbc.gridx = 2; gbc.gridy = 2; gbc.weightx = 0.0;
+    pnlForm.add(lblEstado, gbc);
+    gbc.gridx = 3; gbc.gridy = 2; gbc.weightx = 0.5;
+    pnlForm.add(cmbEstado, gbc);
+
+    // Fila 3: Clasificación y Roles
+    gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.0;
+    pnlForm.add(lblClasificacion, gbc);
+    gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 0.5;
+    pnlForm.add(cmbClasificacion, gbc);
+
+    gbc.gridx = 2; gbc.gridy = 3; gbc.weightx = 0.0;
+    pnlForm.add(lblRoles, gbc);
+    gbc.gridx = 3; gbc.gridy = 3; gbc.weightx = 0.5;
+    pnlForm.add(cmbRoles, gbc);
+
+    // Fila 4: Descripción
+    gbc.gridx = 0; gbc.gridy = 4; gbc.weightx = 0.0; gbc.gridwidth = 1;
+    pnlForm.add(lblDescripcion, gbc);
+    gbc.gridx = 1; gbc.gridy = 4; gbc.weightx = 1.0; gbc.gridwidth = 3;
+    pnlForm.add(jScrollPane4, gbc);
+
+    // Fila 5: Botones
+    JPanel pnlBotones = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 10, 0));
+    pnlBotones.setOpaque(false);
+
+    estilarBoton(btnNuevo, "Nuevo", new Color(241, 245, 249), new Color(30, 41, 59), new Color(203, 213, 225));
+    estilarBoton(btnGuardar, "Guardar", new Color(37, 99, 235), Color.WHITE, new Color(29, 78, 216));
+    estilarBoton(btnEditar, "Editar", new Color(217, 119, 6), Color.WHITE, new Color(180, 83, 9));
+    estilarBoton(btnLimpiar, "Limpiar", new Color(100, 116, 139), Color.WHITE, new Color(71, 85, 105));
+
+    pnlBotones.add(btnNuevo);
+    pnlBotones.add(btnGuardar);
+    pnlBotones.add(btnEditar);
+    pnlBotones.add(btnLimpiar);
+
+    gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 4;
+    gbc.insets = new java.awt.Insets(18, 0, 0, 0);
+    pnlForm.add(pnlBotones, gbc);
+
+    pnlMain.add(pnlForm, java.awt.BorderLayout.NORTH);
+
+    // -------------------------------------------------------------------------
+    // 3.2 BÚSQUEDA Y TABLA (SECCIÓN INFERIOR)
+    // -------------------------------------------------------------------------
+    JPanel pnlTablaContainer = new JPanel(new java.awt.BorderLayout(0, 12));
+    pnlTablaContainer.setOpaque(false);
+
+    // Panel Búsqueda
+    JPanel pnlBuscar = new JPanel(new java.awt.BorderLayout(12, 0));
+    pnlBuscar.setOpaque(false);
+
+    lblBuscar.setText("Buscar cuentas:");
+    lblBuscar.setFont(fontLabel);
+    lblBuscar.setForeground(colorLabel);
+
+    txtBuscar.setFont(fontInput);
+    txtBuscar.setBackground(colorBgInput);
+    txtBuscar.setBorder(borderInput);
+
+    estilarBoton(btnBuscar, "Buscar", new Color(15, 23, 42), Color.WHITE, new Color(15, 23, 42));
+
+    pnlBuscar.add(lblBuscar, java.awt.BorderLayout.WEST);
+    pnlBuscar.add(txtBuscar, java.awt.BorderLayout.CENTER);
+    pnlBuscar.add(btnBuscar, java.awt.BorderLayout.EAST);
+
+    pnlTablaContainer.add(pnlBuscar, java.awt.BorderLayout.NORTH);
+
+    // Configuración de la tabla en jScrollPane3
+    tblCuentas.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+    tblCuentas.setRowHeight(36);
+    tblCuentas.setSelectionBackground(new Color(224, 242, 254));
+    tblCuentas.setSelectionForeground(new Color(15, 23, 42));
+    tblCuentas.setShowVerticalLines(false);
+    tblCuentas.setGridColor(new Color(226, 232, 240));
+
+    javax.swing.table.JTableHeader header = tblCuentas.getTableHeader();
+    header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+    header.setBackground(new Color(241, 245, 249));
+    header.setForeground(new Color(71, 85, 105));
+    header.setPreferredSize(new java.awt.Dimension(0, 38));
+
+    jScrollPane3.setViewportView(tblCuentas);
+    jScrollPane3.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
+    jScrollPane3.getViewport().setBackground(Color.WHITE);
+
+    pnlTablaContainer.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+    pnlMain.add(pnlTablaContainer, java.awt.BorderLayout.CENTER);
+}
+
+private void estilarBoton(JButton btn, String texto, Color bg, Color fg, Color borderColor) {
+    btn.setText(texto);
+    btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+    btn.setBackground(bg);
+    btn.setForeground(fg);
+    btn.setFocusPainted(false);
+    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    btn.setPreferredSize(new Dimension(110, 38));
+    btn.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(borderColor, 1, true),
+            BorderFactory.createEmptyBorder(4, 10, 4, 10)
+    ));
+}
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         //limpiarFormulario();
@@ -244,11 +515,11 @@ public class FrmCuentas extends javax.swing.JPanel {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-       
+
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -265,27 +536,32 @@ public class FrmCuentas extends javax.swing.JPanel {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cmbClasificacion;
     private javax.swing.JComboBox<String> cmbCuentaPadre;
     private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JComboBox<String> cmbNaturaleza;
+    private javax.swing.JComboBox<String> cmbRoles;
     private javax.swing.JComboBox<String> cmbTipo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel lblBuscar;
+    private javax.swing.JLabel lblClasificacion;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblCuentaPadre;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblNaturaleza;
     private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblRoles;
     private javax.swing.JLabel lblTipo;
     private javax.swing.JTable tblCuentas;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
