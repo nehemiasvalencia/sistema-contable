@@ -4,6 +4,16 @@
  */
 package vistas.FrmAdministrador;
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
 
@@ -18,6 +28,7 @@ public class FrmPeriodos extends javax.swing.JPanel {
      */
     public FrmPeriodos(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
         initComponents();
+        initializeComponents();
     }
 
     /**
@@ -29,105 +40,43 @@ public class FrmPeriodos extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        btnNuevo = new javax.swing.JButton();
+        lblTitulo = new javax.swing.JLabel();
+        lblEmpresa = new javax.swing.JLabel();
         cmbEmpresa = new javax.swing.JComboBox<>();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnCerrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblPeriodos = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        lblNombre = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        lblFechaInicio = new javax.swing.JLabel();
+        txtFechaInicio = new javax.swing.JTextField();
+        lblFechaFin = new javax.swing.JLabel();
+        txtFechaFin = new javax.swing.JTextField();
+        lblEstado = new javax.swing.JLabel();
+        cmbEstado = new javax.swing.JComboBox<>();
 
-        jButton1.setText("NUEVO");
+        setName(""); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("PERIODOS CONTABLES");
+        btnNuevo.setText("NUEVO");
 
-        jLabel2.setText("Empresa:");
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitulo.setText("PERIODOS CONTABLES");
+
+        lblEmpresa.setText("Empresa:");
 
         cmbEmpresa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnGuardar.setText("GUARDAR");
 
-        jLabel3.setText("DATOS DEL PERIODO");
+        btnModificar.setText("MODIFICAR");
 
-        jLabel4.setText("Nombre:");
+        btnCerrar.setText("CERRAR PERÍODO");
 
-        jLabel5.setText("Fecha Inicio:");
-
-        jLabel6.setText("Fecha Fin:");
-
-        jLabel7.setText("Estado:");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel7))
-                        .addGap(35, 35, 35)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(202, 202, 202))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-
-        jButton2.setText("GUARDAR");
-
-        jButton3.setText("MODIFICAR");
-
-        jButton4.setText("CERRAR PERÍODO");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblPeriodos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -138,7 +87,19 @@ public class FrmPeriodos extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblPeriodos);
+
+        jLabel1.setText("jLabel1");
+
+        lblNombre.setText("Nombre:");
+
+        lblFechaInicio.setText("Fecha Inicio:");
+
+        lblFechaFin.setText("Fecha Fin:");
+
+        lblEstado.setText("Estado:");
+
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -147,70 +108,598 @@ public class FrmPeriodos extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(182, 182, 182)
+                        .addComponent(lblTitulo)
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton4))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(163, 163, 163)
-                        .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(246, 246, 246)
-                        .addComponent(jLabel1)))
-                .addContainerGap(65, Short.MAX_VALUE))
+                                .addGap(123, 123, 123)
+                                .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblNombre)
+                                        .addComponent(lblEmpresa))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(2, 2, 2)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblFechaFin)
+                                            .addComponent(lblFechaInicio)
+                                            .addComponent(lblEstado))))
+                                .addGap(56, 56, 56)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(btnNuevo)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(btnGuardar)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnModificar)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnCerrar))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jLabel1)
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(lblTitulo)
+                    .addComponent(jLabel1))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEmpresa)
                     .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNombre)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblFechaInicio)
+                    .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFechaFin)
+                    .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblEstado)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(10, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void initializeComponents() {
+
+        // ============================================================
+        // 1. ENCABEZADO
+        // ============================================================
+        JPanel pnlHeader = new JPanel(new java.awt.BorderLayout());
+        pnlHeader.setBackground(new Color(15, 23, 42)); // Slate 900
+        pnlHeader.setPreferredSize(new Dimension(1050, 60));
+        pnlHeader.setBorder(
+                BorderFactory.createEmptyBorder(0, 25, 0, 25)
+        );
+
+        jLabel1.setText("PERÍODOS CONTABLES");
+        jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        jLabel1.setForeground(Color.WHITE);
+
+        pnlHeader.add(jLabel1, java.awt.BorderLayout.CENTER);
+
+        this.setLayout(new java.awt.BorderLayout());
+        this.add(pnlHeader, java.awt.BorderLayout.NORTH);
+
+        // ============================================================
+        // 2. CONTENEDOR PRINCIPAL
+        // ============================================================
+        JPanel pnlMain = new JPanel(
+                new java.awt.BorderLayout(0, 20)
+        );
+
+        pnlMain.setBackground(new Color(241, 245, 249));
+
+        pnlMain.setBorder(
+                BorderFactory.createEmptyBorder(
+                        20, 25, 20, 25
+                )
+        );
+
+        this.add(
+                pnlMain,
+                java.awt.BorderLayout.CENTER
+        );
+
+        // ============================================================
+        // 3. FORMULARIO
+        // ============================================================
+        JPanel pnlForm = new JPanel(
+                new java.awt.GridBagLayout()
+        );
+
+        pnlForm.setBackground(Color.WHITE);
+
+        pnlForm.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(226, 232, 240), 1
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                20, 25, 20, 25
+                        )
+                )
+        );
+
+        // ============================================================
+        // 4. CONFIGURACIÓN GENERAL
+        // ============================================================
+        java.awt.GridBagConstraints gbc
+                = new java.awt.GridBagConstraints();
+
+        gbc.insets
+                = new java.awt.Insets(8, 10, 8, 10);
+
+        gbc.fill
+                = java.awt.GridBagConstraints.HORIZONTAL;
+
+        // Fuentes
+        Font fontLabel
+                = new Font("Segoe UI", Font.BOLD, 13);
+
+        Font fontInput
+                = new Font("Segoe UI", Font.PLAIN, 14);
+
+        // Colores
+        Color colorLabel
+                = new Color(71, 85, 105);
+
+        Color colorBgInput
+                = new Color(248, 250, 252);
+
+        // Bordes de los campos
+        javax.swing.border.Border borderInput
+                = BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(203, 213, 225), 1
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                6, 10, 6, 10
+                        )
+                );
+
+        // ============================================================
+        // 5. TEXTOS DE LAS ETIQUETAS
+        // ============================================================
+        lblEmpresa.setText("Empresa:");
+        lblNombre.setText("Nombre del período:");
+        lblFechaInicio.setText("Fecha de inicio:");
+        lblFechaFin.setText("Fecha de finalización:");
+        lblEstado.setText("Estado:");
+
+        // ============================================================
+        // 6. ESTILO DE LAS ETIQUETAS
+        // ============================================================
+        JLabel[] labels = {
+            lblEmpresa,
+            lblNombre,
+            lblFechaInicio,
+            lblFechaFin,
+            lblEstado
+        };
+
+        for (JLabel lbl : labels) {
+
+            lbl.setFont(fontLabel);
+            lbl.setForeground(colorLabel);
+
+        }
+
+        // ============================================================
+        // 7. ESTILO DE LOS CAMPOS
+        // ============================================================
+        Dimension dimInput
+                = new Dimension(220, 38);
+
+        JComponent[] inputs = {
+            cmbEmpresa,
+            txtNombre,
+            txtFechaInicio,
+            txtFechaFin,
+            cmbEstado
+
+        };
+
+        for (JComponent input : inputs) {
+
+            input.setFont(fontInput);
+
+            input.setBackground(colorBgInput);
+
+            input.setPreferredSize(dimInput);
+
+            if (input instanceof JTextField) {
+
+                input.setBorder(borderInput);
+
+            }
+
+        }
+
+        // ============================================================
+        // 8. CONFIGURAR COMBOBOX
+        // ============================================================
+        cmbEmpresa.setFont(fontInput);
+
+        cmbEmpresa.setBackground(colorBgInput);
+
+        cmbEstado.setFont(fontInput);
+
+        cmbEstado.setBackground(colorBgInput);
+
+        // ============================================================
+        // 9. DISTRIBUCIÓN DEL FORMULARIO
+        // ============================================================
+        // ------------------------------------------------------------
+        // FILA 0
+        // Empresa
+        // Nombre
+        // ------------------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.0;
+
+        pnlForm.add(
+                lblEmpresa,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+
+        pnlForm.add(
+                cmbEmpresa,
+                gbc
+        );
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 0.0;
+
+        pnlForm.add(
+                lblNombre,
+                gbc
+        );
+
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+
+        pnlForm.add(
+                txtNombre,
+                gbc
+        );
+
+        // ------------------------------------------------------------
+        // FILA 1
+        // Fecha inicio
+        // Fecha fin
+        // ------------------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0.0;
+
+        pnlForm.add(
+                lblFechaInicio,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 0.5;
+
+        pnlForm.add(
+                txtFechaInicio,
+                gbc
+        );
+
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.weightx = 0.0;
+
+        pnlForm.add(
+                lblFechaFin,
+                gbc
+        );
+
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.weightx = 0.5;
+
+        pnlForm.add(
+                txtFechaFin,
+                gbc
+        );
+
+        // ------------------------------------------------------------
+        // FILA 2
+        // Estado
+        // ------------------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0.0;
+
+        pnlForm.add(
+                lblEstado,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.weightx = 0.5;
+
+        pnlForm.add(
+                cmbEstado,
+                gbc
+        );
+
+        // ============================================================
+        // 10. BOTONES
+        // ============================================================
+        JPanel pnlBotones
+                = new JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        pnlBotones.setOpaque(false);
+
+        // Botón Nuevo
+        estilarBoton(
+                btnNuevo,
+                "Nuevo",
+                new Color(241, 245, 249),
+                new Color(30, 41, 59),
+                new Color(203, 213, 225)
+        );
+
+        // Botón Guardar
+        estilarBoton(
+                btnGuardar,
+                "Guardar",
+                new Color(37, 99, 235),
+                Color.WHITE,
+                new Color(29, 78, 216)
+        );
+
+        // Botón Editar
+        estilarBoton(
+                btnModificar,
+                "Editar",
+                new Color(217, 119, 6),
+                Color.WHITE,
+                new Color(180, 83, 9)
+        );
+
+
+        pnlBotones.add(btnNuevo);
+        pnlBotones.add(btnGuardar);
+        pnlBotones.add(btnModificar);
+        
+
+        // ------------------------------------------------------------
+        // Agregar botones debajo de los campos
+        // ------------------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 4;
+        gbc.weightx = 1.0;
+
+        gbc.insets
+                = new java.awt.Insets(
+                        18, 0, 0, 0
+                );
+
+        pnlForm.add(
+                pnlBotones,
+                gbc
+        );
+
+        // Agregar formulario al panel principal
+        pnlMain.add(
+                pnlForm,
+                java.awt.BorderLayout.NORTH
+        );
+
+        // ============================================================
+        // 11. SECCIÓN DE BÚSQUEDA Y TABLA
+        // ============================================================
+        JPanel pnlTablaContainer
+                = new JPanel(
+                        new java.awt.BorderLayout(
+                                0, 12
+                        )
+                );
+
+        pnlTablaContainer.setOpaque(false);
+
+
+        // ============================================================
+        // 13. CONFIGURACIÓN DE LA TABLA
+        // ============================================================
+        tblPeriodos.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.PLAIN,
+                        13
+                )
+        );
+
+        tblPeriodos.setRowHeight(36);
+
+        tblPeriodos.setSelectionBackground(
+                new Color(224, 242, 254)
+        );
+
+        tblPeriodos.setSelectionForeground(
+                new Color(15, 23, 42)
+        );
+
+        tblPeriodos.setShowVerticalLines(false);
+
+        tblPeriodos.setGridColor(
+                new Color(226, 232, 240)
+        );
+
+        // ============================================================
+        // 14. ENCABEZADO DE LA TABLA
+        // ============================================================
+        javax.swing.table.JTableHeader header
+                = tblPeriodos.getTableHeader();
+
+        header.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        12
+                )
+        );
+
+        header.setBackground(
+                new Color(241, 245, 249)
+        );
+
+        header.setForeground(
+                new Color(71, 85, 105)
+        );
+
+        header.setPreferredSize(
+                new Dimension(
+                        0,
+                        38
+                )
+        );
+
+        // ============================================================
+        // 15. SCROLL DE LA TABLA
+        // ============================================================
+        jScrollPane1.setViewportView(
+                tblPeriodos
+        );
+
+        jScrollPane1.setBorder(
+                BorderFactory.createLineBorder(
+                        new Color(226, 232, 240),
+                        1
+                )
+        );
+
+        jScrollPane1.getViewport()
+                .setBackground(Color.WHITE);
+
+        pnlTablaContainer.add(
+                jScrollPane1,
+                java.awt.BorderLayout.CENTER
+        );
+
+        // Agregar tabla al panel principal
+        pnlMain.add(
+                pnlTablaContainer,
+                java.awt.BorderLayout.CENTER
+        );
+    }
+    
+    private void estilarBoton(
+            JButton btn,
+            String texto,
+            Color bg,
+            Color fg,
+            Color borderColor) {
+
+        btn.setText(texto);
+
+        btn.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        13
+                )
+        );
+
+        btn.setBackground(bg);
+
+        btn.setForeground(fg);
+
+        btn.setFocusPainted(false);
+
+        btn.setCursor(
+                new Cursor(
+                        Cursor.HAND_CURSOR
+                )
+        );
+
+        btn.setPreferredSize(
+                new Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btn.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                borderColor,
+                                1,
+                                true
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                4,
+                                10,
+                                4,
+                                10
+                        )
+                )
+        );
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cmbEmpresa;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblEmpresa;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblFechaFin;
+    private javax.swing.JLabel lblFechaInicio;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTable tblPeriodos;
+    private javax.swing.JTextField txtFechaFin;
+    private javax.swing.JTextField txtFechaInicio;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
