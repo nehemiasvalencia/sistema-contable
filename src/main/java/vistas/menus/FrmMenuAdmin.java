@@ -20,6 +20,7 @@ import vistas.FrmAdministrador.FrmCuentas;
 import vistas.FrmAdministrador.FrmDashboard;
 import vistas.FrmAdministrador.FrmEmpresa;
 import vistas.FrmAdministrador.FrmImpuestos;
+import vistas.FrmAdministrador.FrmOperaciones;
 import vistas.FrmAdministrador.FrmPeriodos;
 import vistas.FrmAdministrador.FrmProductos;
 import vistas.FrmMenuPrincipal;
@@ -92,6 +93,7 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
         btnCerrarSesion.addActionListener(this::btnCerrarSesionActionPerformed);
 
         btnOperaciones.setText("Operaciones");
+        btnOperaciones.addActionListener(this::btnOperacionesActionPerformed);
 
         btnConfiguracion.setText("Configuracion");
 
@@ -238,6 +240,13 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
 
         menuPrincipal.mostrarVentana(frmDashboard);
     }//GEN-LAST:event_btnDashboardActionPerformed
+
+    private void btnOperacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOperacionesActionPerformed
+        FrmOperaciones frmOperaciones
+                = new FrmOperaciones(usuario, menuPrincipal);
+
+        menuPrincipal.mostrarVentana(frmOperaciones);
+    }//GEN-LAST:event_btnOperacionesActionPerformed
 
     public void initializeComponents() {
         // 1. Fondo general neutro y limpio
