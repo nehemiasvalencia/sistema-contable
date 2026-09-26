@@ -26,6 +26,7 @@ import vistas.FrmAdministrador.FrmProductos;
 import vistas.FrmMenuPrincipal;
 import vistas.FrmLogin;
 import vistas.FrmAdministrador.FrmUsuarios;
+import vistas.FrmAdministrador.FrmProductos;
 
 /**
  *

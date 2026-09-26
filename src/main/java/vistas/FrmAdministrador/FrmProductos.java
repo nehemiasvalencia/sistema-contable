@@ -4,6 +4,7 @@
  */
 package vistas.FrmAdministrador;
 
+import controladores.ProductoController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
+
 
 
 /**
@@ -375,7 +377,6 @@ public class FrmProductos extends javax.swing.JPanel {
         cmbUnidadMedida.setPreferredSize(
                 new Dimension(220, 38)
         );
-        
 
         cmbEstado.setFont(
                 new Font("Segoe UI", Font.PLAIN, 14)
@@ -477,7 +478,6 @@ public class FrmProductos extends javax.swing.JPanel {
         estilarBoton(btnNuevo, "nuevo");
         estilarBoton(btnGuardar, "guardar");
         estilarBoton(btnModificar, "editar");
-        
 
         pnlBotones.add(btnNuevo);
         pnlBotones.add(btnGuardar);
