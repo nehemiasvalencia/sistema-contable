@@ -4,6 +4,7 @@
  */
 package vistas.FrmAdministrador;
 
+import controladores.RolReporteController;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -17,6 +18,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
+import controladores.CuentaController;
+import modelos.Cuentas;
+import modelos.RolReporte;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -24,12 +34,39 @@ import vistas.FrmMenuPrincipal;
  */
 public class FrmCuentas extends javax.swing.JPanel {
 
+    private RolReporteController rolReporteController;
+    private CuentaController controlador;
+    private int idCuentaSeleccionada = 0;
+
     /**
      * Creates new form FrmCuentas
      */
     public FrmCuentas(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
         initComponents();
         initializeComponents();
+        rolReporteController = new RolReporteController();
+
+        cargarRolesReporte();
+
+        try {
+
+            controlador = new CuentaController();
+
+            cargarTabla();
+            configurarFormularioInicial();
+
+            btnEditar.setEnabled(false);
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al conectar con la base de datos:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     /**
@@ -52,12 +89,10 @@ public class FrmCuentas extends javax.swing.JPanel {
         lblTipo = new javax.swing.JLabel();
         lblCuentaPadre = new javax.swing.JLabel();
         cmbTipo = new javax.swing.JComboBox<>();
-        cmbCuentaPadre = new javax.swing.JComboBox<>();
         lblNaturaleza = new javax.swing.JLabel();
         cmbNaturaleza = new javax.swing.JComboBox<>();
         lblEstado = new javax.swing.JLabel();
         cmbEstado = new javax.swing.JComboBox<>();
-        lblDescripcion = new javax.swing.JLabel();
         btnNuevo = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
@@ -67,12 +102,11 @@ public class FrmCuentas extends javax.swing.JPanel {
         btnBuscar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblCuentas = new javax.swing.JTable();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
         lblClasificacion = new javax.swing.JLabel();
         cmbClasificacion = new javax.swing.JComboBox<>();
         lblRoles = new javax.swing.JLabel();
         cmbRoles = new javax.swing.JComboBox<>();
+        txtCuentaPadre = new javax.swing.JTextField();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -86,22 +120,17 @@ public class FrmCuentas extends javax.swing.JPanel {
 
         lblTipo.setText("Tipo de cuenta:");
 
-        lblCuentaPadre.setText("Cuenta padre:");
+        lblCuentaPadre.setText("Ingrese el codigo de la cuenta padre:");
 
-        cmbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        cmbCuentaPadre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbCuentaPadre.addActionListener(this::cmbCuentaPadreActionPerformed);
+        cmbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Pasivo", "Capital", "Ingreso", "Costo", "Gasto" }));
 
         lblNaturaleza.setText("Naturaleza");
 
-        cmbNaturaleza.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbNaturaleza.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deudora", "Acreedora" }));
 
         lblEstado.setText("Estado");
 
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
-
-        lblDescripcion.setText("Descripcion");
 
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(this::btnNuevoActionPerformed);
@@ -113,55 +142,51 @@ public class FrmCuentas extends javax.swing.JPanel {
         btnEditar.addActionListener(this::btnEditarActionPerformed);
 
         btnLimpiar.setText("Limpiar");
-        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
+        btnLimpiar.addActionListener((evt) -> {
+            btnLimpiarActionPerformed(evt);
+            btnLimpiarActionPerformed2(evt);
+        });
 
         lblBuscar.setText("Buscar cuentas:");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
         tblCuentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nombre", "Tipo de cuenta", "Cuenta padre", "Estado"
+                "Código", "Nombre", "Tipo de cuenta", "Clasificacion", "Naturaleza", "Cuenta padre", "Estado"
             }
         ));
+        tblCuentas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCuentasMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblCuentas);
-
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane4.setViewportView(jTextArea2);
 
         lblClasificacion.setText("Clasificacion ");
 
-        cmbClasificacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbClasificacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Corriente", "No corriente", "Patrimonio", "Resultado" }));
 
         lblRoles.setText("Rol en el Reporte");
-
-        cmbRoles.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(39, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblBuscar)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar)
-                        .addGap(82, 82, 82))))
+                .addComponent(lblBuscar)
+                .addGap(18, 18, 18)
+                .addComponent(txtBuscar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBuscar)
+                .addGap(43, 43, 43))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -183,8 +208,7 @@ public class FrmCuentas extends javax.swing.JPanel {
                                     .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblTipo)
                                     .addComponent(lblNaturaleza)
-                                    .addComponent(cmbNaturaleza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblDescripcion))))
+                                    .addComponent(cmbNaturaleza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(77, 77, 77)
@@ -193,25 +217,27 @@ public class FrmCuentas extends javax.swing.JPanel {
                                     .addComponent(jLabel1)
                                     .addComponent(lblClasificacion)
                                     .addComponent(cmbRoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(77, 77, 77)
-                                    .addComponent(cmbClasificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(34, 34, 34))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lblRoles)
-                                    .addGap(18, 18, 18)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(66, 66, 66)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
-                                        .addComponent(lblEstado))
-                                    .addComponent(cmbCuentaPadre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtCuentaPadre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblEstado)))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(77, 77, 77)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(lblRoles))
+                                    .addComponent(cmbClasificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
+                        .addGap(6, 6, 6)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnGuardar)
@@ -219,11 +245,7 @@ public class FrmCuentas extends javax.swing.JPanel {
                         .addComponent(btnEditar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnLimpiar)))
-                .addContainerGap(251, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +275,7 @@ public class FrmCuentas extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbCuentaPadre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCuentaPadre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNaturaleza)
@@ -262,11 +284,7 @@ public class FrmCuentas extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbNaturaleza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDescripcion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
                     .addComponent(btnGuardar)
@@ -279,255 +297,875 @@ public class FrmCuentas extends javax.swing.JPanel {
                     .addComponent(btnBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(54, 54, 54))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initializeComponents() {
-    // 1. Configuración de la Ventana Principal
-   
-    // 2. Encabezado (Header)
-    JPanel pnlHeader = new JPanel(new java.awt.BorderLayout());
-    pnlHeader.setBackground(new Color(15, 23, 42)); // Slate 900
-    pnlHeader.setPreferredSize(new java.awt.Dimension(1050, 60));
-    pnlHeader.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
+    private void cargarRolesReporte() {
 
-    jLabel1.setText("CATÁLOGO DE CUENTAS");
-    jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 20));
-    jLabel1.setForeground(Color.WHITE);
-    pnlHeader.add(jLabel1, java.awt.BorderLayout.CENTER);
+        cmbRoles.removeAllItems();
 
-    this.add(pnlHeader, java.awt.BorderLayout.NORTH);
+        List<RolReporte> roles
+                = rolReporteController.listarRolesReporte();
 
-    // 3. Contenedor Principal
-    JPanel pnlMain = new JPanel(new java.awt.BorderLayout(0, 20));
-    pnlMain.setBackground(new Color(241, 245, 249));
-    pnlMain.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
-    this.add(pnlMain, java.awt.BorderLayout.CENTER);
-
-    // -------------------------------------------------------------------------
-    // 3.1 FORMULARIO DE REGISTRO
-    // -------------------------------------------------------------------------
-    JPanel pnlForm = new JPanel(new java.awt.GridBagLayout());
-    pnlForm.setBackground(Color.WHITE);
-    pnlForm.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
-            BorderFactory.createEmptyBorder(20, 25, 20, 25)
-    ));
-
-    java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
-    gbc.insets = new java.awt.Insets(8, 10, 8, 10);
-    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-
-    Font fontLabel = new Font("Segoe UI", Font.BOLD, 13);
-    Color colorLabel = new Color(71, 85, 105);
-    Font fontInput = new Font("Segoe UI", Font.PLAIN, 14);
-    Color colorBgInput = new Color(248, 250, 252);
-
-    javax.swing.border.Border borderInput = BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(203, 213, 225), 1),
-            BorderFactory.createEmptyBorder(6, 10, 6, 10)
-    );
-
-    // Asignar etiquetas (incluye Clasificación y Roles)
-    lblCodigo.setText("Código de cuenta:");
-    lblNombre.setText("Nombre de la cuenta:");
-    lblTipo.setText("Tipo de cuenta:");
-    lblCuentaPadre.setText("Cuenta padre:");
-    lblNaturaleza.setText("Naturaleza:");
-    lblEstado.setText("Estado:");
-    lblClasificacion.setText("Clasificación:");
-    lblRoles.setText("Roles:");
-    lblDescripcion.setText("Descripción:");
-
-    JLabel[] labels = {
-        lblCodigo, lblNombre, lblTipo, lblCuentaPadre, 
-        lblNaturaleza, lblEstado, lblClasificacion, lblRoles, lblDescripcion
-    };
-    for (JLabel lbl : labels) {
-        lbl.setFont(fontLabel);
-        lbl.setForeground(colorLabel);
-    }
-
-    // Configurar componentes de entrada
-    Dimension dimInput = new Dimension(220, 38);
-    JComponent[] inputs = {
-        txtCodigo, txtNombre, cmbTipo, cmbCuentaPadre, 
-        cmbNaturaleza, cmbEstado, cmbClasificacion, cmbRoles
-    };
-    for (JComponent input : inputs) {
-        input.setFont(fontInput);
-        input.setBackground(colorBgInput);
-        input.setPreferredSize(dimInput);
-        if (input instanceof JTextField) {
-            input.setBorder(borderInput);
+        for (RolReporte rol : roles) {
+            cmbRoles.addItem(rol);
         }
     }
 
-    // Configuración de la Descripción (jTextArea2 dentro de jScrollPane4)
-    jTextArea2.setFont(fontInput);
-    jTextArea2.setBackground(colorBgInput);
-    jTextArea2.setLineWrap(true);
-    jTextArea2.setWrapStyleWord(true);
-    jTextArea2.setRows(3);
+    private void initializeComponents() {
+        // 1. Configuración de la Ventana Principal
 
-    jScrollPane4.setViewportView(jTextArea2);
-    jScrollPane4.setBorder(borderInput);
-    jScrollPane4.setPreferredSize(new Dimension(0, 75));
+        // 2. Encabezado (Header)
+        JPanel pnlHeader = new JPanel(new java.awt.BorderLayout());
+        pnlHeader.setBackground(new Color(15, 23, 42)); // Slate 900
+        pnlHeader.setPreferredSize(new java.awt.Dimension(1050, 60));
+        pnlHeader.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
 
-    // --- Distribución en GridBagLayout ---
-    // Fila 0: Código y Nombre
-    gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.0;
-    pnlForm.add(lblCodigo, gbc);
-    gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.5;
-    pnlForm.add(txtCodigo, gbc);
+        jLabel1.setText("CATÁLOGO DE CUENTAS");
+        jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        jLabel1.setForeground(Color.WHITE);
+        pnlHeader.add(jLabel1, java.awt.BorderLayout.CENTER);
 
-    gbc.gridx = 2; gbc.gridy = 0; gbc.weightx = 0.0;
-    pnlForm.add(lblNombre, gbc);
-    gbc.gridx = 3; gbc.gridy = 0; gbc.weightx = 0.5;
-    pnlForm.add(txtNombre, gbc);
+        this.add(pnlHeader, java.awt.BorderLayout.NORTH);
 
-    // Fila 1: Tipo de Cuenta y Cuenta Padre
-    gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.0;
-    pnlForm.add(lblTipo, gbc);
-    gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 0.5;
-    pnlForm.add(cmbTipo, gbc);
+        // 3. Contenedor Principal
+        JPanel pnlMain = new JPanel(new java.awt.BorderLayout(0, 20));
+        pnlMain.setBackground(new Color(241, 245, 249));
+        pnlMain.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
+        this.add(pnlMain, java.awt.BorderLayout.CENTER);
 
-    gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0.0;
-    pnlForm.add(lblCuentaPadre, gbc);
-    gbc.gridx = 3; gbc.gridy = 1; gbc.weightx = 0.5;
-    pnlForm.add(cmbCuentaPadre, gbc);
+        // -------------------------------------------------------------------------
+        // 3.1 FORMULARIO DE REGISTRO
+        // -------------------------------------------------------------------------
+        JPanel pnlForm = new JPanel(new java.awt.GridBagLayout());
+        pnlForm.setBackground(Color.WHITE);
+        pnlForm.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(20, 25, 20, 25)
+        ));
 
-    // Fila 2: Naturaleza y Estado
-    gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
-    pnlForm.add(lblNaturaleza, gbc);
-    gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 0.5;
-    pnlForm.add(cmbNaturaleza, gbc);
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.insets = new java.awt.Insets(8, 10, 8, 10);
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
 
-    gbc.gridx = 2; gbc.gridy = 2; gbc.weightx = 0.0;
-    pnlForm.add(lblEstado, gbc);
-    gbc.gridx = 3; gbc.gridy = 2; gbc.weightx = 0.5;
-    pnlForm.add(cmbEstado, gbc);
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 13);
+        Color colorLabel = new Color(71, 85, 105);
+        Font fontInput = new Font("Segoe UI", Font.PLAIN, 14);
+        Color colorBgInput = new Color(248, 250, 252);
 
-    // Fila 3: Clasificación y Roles
-    gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.0;
-    pnlForm.add(lblClasificacion, gbc);
-    gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 0.5;
-    pnlForm.add(cmbClasificacion, gbc);
+        javax.swing.border.Border borderInput = BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(203, 213, 225), 1),
+                BorderFactory.createEmptyBorder(6, 10, 6, 10)
+        );
 
-    gbc.gridx = 2; gbc.gridy = 3; gbc.weightx = 0.0;
-    pnlForm.add(lblRoles, gbc);
-    gbc.gridx = 3; gbc.gridy = 3; gbc.weightx = 0.5;
-    pnlForm.add(cmbRoles, gbc);
+        // Asignar etiquetas (incluye Clasificación y Roles)
+        lblCodigo.setText("Código de cuenta:");
+        lblNombre.setText("Nombre de la cuenta:");
+        lblTipo.setText("Tipo de cuenta:");
+        lblCuentaPadre.setText("Cuenta padre:");
+        lblNaturaleza.setText("Naturaleza:");
+        lblEstado.setText("Estado:");
+        lblClasificacion.setText("Clasificación:");
+        lblRoles.setText("Roles:");
 
-    // Fila 4: Descripción
-    gbc.gridx = 0; gbc.gridy = 4; gbc.weightx = 0.0; gbc.gridwidth = 1;
-    pnlForm.add(lblDescripcion, gbc);
-    gbc.gridx = 1; gbc.gridy = 4; gbc.weightx = 1.0; gbc.gridwidth = 3;
-    pnlForm.add(jScrollPane4, gbc);
+        JLabel[] labels = {
+            lblCodigo, lblNombre, lblTipo, lblCuentaPadre,
+            lblNaturaleza, lblEstado, lblClasificacion, lblRoles
+        };
+        for (JLabel lbl : labels) {
+            lbl.setFont(fontLabel);
+            lbl.setForeground(colorLabel);
+        }
 
-    // Fila 5: Botones
-    JPanel pnlBotones = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 10, 0));
-    pnlBotones.setOpaque(false);
+        // Configurar componentes de entrada
+        Dimension dimInput = new Dimension(220, 38);
+        JComponent[] inputs = {
+            txtCodigo, txtNombre, cmbTipo, txtCuentaPadre,
+            cmbNaturaleza, cmbEstado, cmbClasificacion, cmbRoles
+        };
+        for (JComponent input : inputs) {
+            input.setFont(fontInput);
+            input.setBackground(colorBgInput);
+            input.setPreferredSize(dimInput);
+            if (input instanceof JTextField) {
+                input.setBorder(borderInput);
+            }
+        }
 
-    estilarBoton(btnNuevo, "Nuevo", new Color(241, 245, 249), new Color(30, 41, 59), new Color(203, 213, 225));
-    estilarBoton(btnGuardar, "Guardar", new Color(37, 99, 235), Color.WHITE, new Color(29, 78, 216));
-    estilarBoton(btnEditar, "Editar", new Color(217, 119, 6), Color.WHITE, new Color(180, 83, 9));
-    estilarBoton(btnLimpiar, "Limpiar", new Color(100, 116, 139), Color.WHITE, new Color(71, 85, 105));
+        // --- Distribución en GridBagLayout ---
+        // Fila 0: Código y Nombre
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblCodigo, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        pnlForm.add(txtCodigo, gbc);
 
-    pnlBotones.add(btnNuevo);
-    pnlBotones.add(btnGuardar);
-    pnlBotones.add(btnEditar);
-    pnlBotones.add(btnLimpiar);
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblNombre, gbc);
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        pnlForm.add(txtNombre, gbc);
 
-    gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 4;
-    gbc.insets = new java.awt.Insets(18, 0, 0, 0);
-    pnlForm.add(pnlBotones, gbc);
+        // Fila 1: Tipo de Cuenta y Cuenta Padre
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblTipo, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 0.5;
+        pnlForm.add(cmbTipo, gbc);
 
-    pnlMain.add(pnlForm, java.awt.BorderLayout.NORTH);
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblCuentaPadre, gbc);
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.weightx = 0.5;
+        pnlForm.add(txtCuentaPadre, gbc);
 
-    // -------------------------------------------------------------------------
-    // 3.2 BÚSQUEDA Y TABLA (SECCIÓN INFERIOR)
-    // -------------------------------------------------------------------------
-    JPanel pnlTablaContainer = new JPanel(new java.awt.BorderLayout(0, 12));
-    pnlTablaContainer.setOpaque(false);
+        // Fila 2: Naturaleza y Estado
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblNaturaleza, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.weightx = 0.5;
+        pnlForm.add(cmbNaturaleza, gbc);
 
-    // Panel Búsqueda
-    JPanel pnlBuscar = new JPanel(new java.awt.BorderLayout(12, 0));
-    pnlBuscar.setOpaque(false);
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblEstado, gbc);
+        gbc.gridx = 3;
+        gbc.gridy = 2;
+        gbc.weightx = 0.5;
+        pnlForm.add(cmbEstado, gbc);
 
-    lblBuscar.setText("Buscar cuentas:");
-    lblBuscar.setFont(fontLabel);
-    lblBuscar.setForeground(colorLabel);
+        // Fila 3: Clasificación y Roles
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblClasificacion, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.weightx = 0.5;
+        pnlForm.add(cmbClasificacion, gbc);
 
-    txtBuscar.setFont(fontInput);
-    txtBuscar.setBackground(colorBgInput);
-    txtBuscar.setBorder(borderInput);
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        gbc.weightx = 0.0;
+        pnlForm.add(lblRoles, gbc);
+        gbc.gridx = 3;
+        gbc.gridy = 3;
+        gbc.weightx = 0.5;
+        pnlForm.add(cmbRoles, gbc);
 
-    estilarBoton(btnBuscar, "Buscar", new Color(15, 23, 42), Color.WHITE, new Color(15, 23, 42));
+        // Fila 4: Descripción
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.weightx = 0.0;
+        gbc.gridwidth = 1;
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.weightx = 1.0;
+        gbc.gridwidth = 3;
 
-    pnlBuscar.add(lblBuscar, java.awt.BorderLayout.WEST);
-    pnlBuscar.add(txtBuscar, java.awt.BorderLayout.CENTER);
-    pnlBuscar.add(btnBuscar, java.awt.BorderLayout.EAST);
+        // Fila 5: Botones
+        JPanel pnlBotones = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 10, 0));
+        pnlBotones.setOpaque(false);
 
-    pnlTablaContainer.add(pnlBuscar, java.awt.BorderLayout.NORTH);
+        estilarBoton(btnNuevo, "Nuevo", new Color(241, 245, 249), new Color(30, 41, 59), new Color(203, 213, 225));
+        estilarBoton(btnGuardar, "Guardar", new Color(37, 99, 235), Color.WHITE, new Color(29, 78, 216));
+        estilarBoton(btnEditar, "Editar", new Color(217, 119, 6), Color.WHITE, new Color(180, 83, 9));
+        estilarBoton(btnLimpiar, "Limpiar", new Color(100, 116, 139), Color.WHITE, new Color(71, 85, 105));
 
-    // Configuración de la tabla en jScrollPane3
-    tblCuentas.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-    tblCuentas.setRowHeight(36);
-    tblCuentas.setSelectionBackground(new Color(224, 242, 254));
-    tblCuentas.setSelectionForeground(new Color(15, 23, 42));
-    tblCuentas.setShowVerticalLines(false);
-    tblCuentas.setGridColor(new Color(226, 232, 240));
+        pnlBotones.add(btnNuevo);
+        pnlBotones.add(btnGuardar);
+        pnlBotones.add(btnEditar);
+        pnlBotones.add(btnLimpiar);
 
-    javax.swing.table.JTableHeader header = tblCuentas.getTableHeader();
-    header.setFont(new Font("Segoe UI", Font.BOLD, 12));
-    header.setBackground(new Color(241, 245, 249));
-    header.setForeground(new Color(71, 85, 105));
-    header.setPreferredSize(new java.awt.Dimension(0, 38));
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 4;
+        gbc.insets = new java.awt.Insets(18, 0, 0, 0);
+        pnlForm.add(pnlBotones, gbc);
 
-    jScrollPane3.setViewportView(tblCuentas);
-    jScrollPane3.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
-    jScrollPane3.getViewport().setBackground(Color.WHITE);
+        pnlMain.add(pnlForm, java.awt.BorderLayout.NORTH);
 
-    pnlTablaContainer.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+        // -------------------------------------------------------------------------
+        // 3.2 BÚSQUEDA Y TABLA (SECCIÓN INFERIOR)
+        // -------------------------------------------------------------------------
+        JPanel pnlTablaContainer = new JPanel(new java.awt.BorderLayout(0, 12));
+        pnlTablaContainer.setOpaque(false);
 
-    pnlMain.add(pnlTablaContainer, java.awt.BorderLayout.CENTER);
-}
+        // Panel Búsqueda
+        JPanel pnlBuscar = new JPanel(new java.awt.BorderLayout(12, 0));
+        pnlBuscar.setOpaque(false);
 
-private void estilarBoton(JButton btn, String texto, Color bg, Color fg, Color borderColor) {
-    btn.setText(texto);
-    btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-    btn.setBackground(bg);
-    btn.setForeground(fg);
-    btn.setFocusPainted(false);
-    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    btn.setPreferredSize(new Dimension(110, 38));
-    btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(borderColor, 1, true),
-            BorderFactory.createEmptyBorder(4, 10, 4, 10)
-    ));
-}
+        lblBuscar.setText("Buscar cuentas:");
+        lblBuscar.setFont(fontLabel);
+        lblBuscar.setForeground(colorLabel);
+
+        txtBuscar.setFont(fontInput);
+        txtBuscar.setBackground(colorBgInput);
+        txtBuscar.setBorder(borderInput);
+
+        estilarBoton(btnBuscar, "Buscar", new Color(15, 23, 42), Color.WHITE, new Color(15, 23, 42));
+
+        pnlBuscar.add(lblBuscar, java.awt.BorderLayout.WEST);
+        pnlBuscar.add(txtBuscar, java.awt.BorderLayout.CENTER);
+        pnlBuscar.add(btnBuscar, java.awt.BorderLayout.EAST);
+
+        pnlTablaContainer.add(pnlBuscar, java.awt.BorderLayout.NORTH);
+
+        // Configuración de la tabla en jScrollPane3
+        tblCuentas.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tblCuentas.setRowHeight(36);
+        tblCuentas.setSelectionBackground(new Color(224, 242, 254));
+        tblCuentas.setSelectionForeground(new Color(15, 23, 42));
+        tblCuentas.setShowVerticalLines(false);
+        tblCuentas.setGridColor(new Color(226, 232, 240));
+
+        javax.swing.table.JTableHeader header = tblCuentas.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        header.setBackground(new Color(241, 245, 249));
+        header.setForeground(new Color(71, 85, 105));
+        header.setPreferredSize(new java.awt.Dimension(0, 38));
+
+        jScrollPane3.setViewportView(tblCuentas);
+        jScrollPane3.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
+        jScrollPane3.getViewport().setBackground(Color.WHITE);
+
+        pnlTablaContainer.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        pnlMain.add(pnlTablaContainer, java.awt.BorderLayout.CENTER);
+    }
+
+    private void estilarBoton(JButton btn, String texto, Color bg, Color fg, Color borderColor) {
+        btn.setText(texto);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setBackground(bg);
+        btn.setForeground(fg);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setPreferredSize(new Dimension(110, 38));
+        btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(borderColor, 1, true),
+                BorderFactory.createEmptyBorder(4, 10, 4, 10)
+        ));
+    }
+
+    private void cargarTabla() {
+
+        try {
+
+            DefaultTableModel modelo
+                    = (DefaultTableModel) tblCuentas.getModel();
+
+            modelo.setRowCount(0);
+
+            List<Cuentas> cuentas = controlador.listar();
+
+            for (Cuentas cuenta : cuentas) {
+
+                String cuentaPadre = "";
+
+                if (cuenta.getIdCuentaPadre() != null) {
+                    cuentaPadre
+                            = String.valueOf(cuenta.getIdCuentaPadre());
+                }
+
+                modelo.addRow(new Object[]{
+                    cuenta.getCodigo(),
+                    cuenta.getNombre(),
+                    cuenta.getTipo(),
+                    cuenta.getClasificacion(),
+                    cuenta.getNaturaleza(),
+                    cuentaPadre,
+                    cuenta.isEstado() ? "Activo" : "Inactivo"
+                });
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al cargar las cuentas:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void configurarFormularioInicial() {
+
+        txtCodigo.setEnabled(false);
+        txtNombre.setEnabled(false);
+        txtCuentaPadre.setEnabled(false);
+
+        cmbTipo.setEnabled(false);
+        cmbNaturaleza.setEnabled(false);
+        cmbEstado.setEnabled(false);
+        cmbClasificacion.setEnabled(false);
+        cmbRoles.setEnabled(false);
+
+        btnGuardar.setEnabled(false);
+        btnEditar.setEnabled(false);
+    }
+
+    private void habilitarFormulario() {
+
+        txtCodigo.setEnabled(true);
+        txtNombre.setEnabled(true);
+        txtCuentaPadre.setEnabled(true);
+
+        cmbTipo.setEnabled(true);
+        cmbNaturaleza.setEnabled(true);
+        cmbEstado.setEnabled(true);
+        cmbClasificacion.setEnabled(true);
+        cmbRoles.setEnabled(true);
+    }
+
+    private void limpiarFormulario() {
+
+        txtCodigo.setText("");
+        txtNombre.setText("");
+        txtCuentaPadre.setText("");
+        txtBuscar.setText("");
+
+        if (cmbTipo.getItemCount() > 0) {
+            cmbTipo.setSelectedIndex(0);
+        }
+
+        if (cmbNaturaleza.getItemCount() > 0) {
+            cmbNaturaleza.setSelectedIndex(0);
+        }
+
+        if (cmbEstado.getItemCount() > 0) {
+            cmbEstado.setSelectedIndex(0);
+        }
+
+        if (cmbClasificacion.getItemCount() > 0) {
+            cmbClasificacion.setSelectedIndex(0);
+        }
+
+        if (cmbRoles.getItemCount() > 0) {
+            cmbRoles.setSelectedIndex(0);
+        }
+
+        idCuentaSeleccionada = 0;
+    }
+
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        //limpiarFormulario();
-        txtNombre.requestFocus();
+        limpiarFormulario();
+
+        habilitarFormulario();
+
+        btnGuardar.setEnabled(true);
+        btnEditar.setEnabled(false);
+
+        txtCodigo.requestFocus();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        String codigo = txtCodigo.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String codigoPadre = txtCuentaPadre.getText().trim();
 
+        if (codigo.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese el código de la cuenta."
+            );
+
+            txtCodigo.requestFocus();
+            return;
+        }
+
+        if (nombre.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese el nombre de la cuenta."
+            );
+
+            txtNombre.requestFocus();
+            return;
+        }
+
+        Integer idCuentaPadre = null;
+
+        // Search parent account by code
+        if (!codigoPadre.isEmpty()) {
+
+            Cuentas padre = controlador.buscarPorCodigo(codigoPadre);
+
+            if (padre == null) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "La cuenta padre no existe.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+                txtCuentaPadre.requestFocus();
+                return;
+            }
+
+            idCuentaPadre = padre.getIdCuenta();
+        }
+
+        // Get values from the form
+        String tipoSeleccionado
+                = cmbTipo.getSelectedItem().toString();
+
+        String clasificacionSeleccionada
+                = cmbClasificacion.getSelectedItem().toString();
+
+        String naturalezaSeleccionada
+                = cmbNaturaleza.getSelectedItem().toString();
+
+        // Convert type to database ENUM value
+        String tipoBD = "";
+
+        switch (tipoSeleccionado) {
+
+            case "Activo":
+                tipoBD = "ACTIVO";
+                break;
+
+            case "Pasivo":
+                tipoBD = "PASIVO";
+                break;
+
+            case "Capital":
+                tipoBD = "CAPITAL";
+                break;
+
+            case "Ingreso":
+                tipoBD = "INGRESO";
+                break;
+
+            case "Costos":
+                tipoBD = "COSTO";
+                break;
+
+            case "Gastos":
+                tipoBD = "GASTO";
+                break;
+        }
+
+        // Convert classification to database ENUM value
+        String clasificacionBD = "";
+
+        switch (clasificacionSeleccionada) {
+
+            case "Corriente":
+                clasificacionBD = "CORRIENTE";
+                break;
+
+            case "No corriente":
+                clasificacionBD = "NO_CORRIENTE";
+                break;
+
+            case "Patrimonio":
+                clasificacionBD = "PATRIMONIO";
+                break;
+
+            case "Resultado":
+                clasificacionBD = "RESULTADO";
+                break;
+        }
+
+        // Convert nature to database ENUM value
+        String naturalezaBD = "";
+
+        switch (naturalezaSeleccionada) {
+
+            case "Deudora":
+                naturalezaBD = "DEUDORA";
+                break;
+
+            case "Acreedora":
+                naturalezaBD = "ACREEDORA";
+                break;
+        }
+
+        Cuentas cuenta = new Cuentas();
+
+        cuenta.setCodigo(codigo);
+        cuenta.setNombre(nombre);
+
+        cuenta.setTipo(tipoBD);
+        cuenta.setClasificacion(clasificacionBD);
+        cuenta.setNaturaleza(naturalezaBD);
+
+        cuenta.setIdCuentaPadre(idCuentaPadre);
+
+        cuenta.setEstado(
+                cmbEstado.getSelectedItem()
+                        .toString()
+                        .equals("Activo")
+        );
+
+        boolean resultado = controlador.guardar(cuenta);
+
+        if (resultado) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Cuenta guardada correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            cargarTabla();
+            limpiarFormulario();
+            configurarFormularioInicial();
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo guardar la cuenta.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        if (idCuentaSeleccionada <= 0) {
 
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione una cuenta de la tabla."
+            );
+
+            return;
+        }
+
+        try {
+
+            String codigo = txtCodigo.getText().trim();
+            String nombre = txtNombre.getText().trim();
+            String codigoPadre = txtCuentaPadre.getText().trim();
+
+            if (codigo.isEmpty() || nombre.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "El código y el nombre son obligatorios."
+                );
+
+                return;
+            }
+
+            Integer idCuentaPadre = null;
+
+            // Search parent account by code
+            if (!codigoPadre.isEmpty()) {
+
+                Cuentas padre
+                        = controlador.buscarPorCodigo(codigoPadre);
+
+                if (padre == null) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "La cuenta padre no existe.",
+                            "Advertencia",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+
+                    txtCuentaPadre.requestFocus();
+                    return;
+                }
+
+                // Prevent account from being its own parent
+                if (padre.getIdCuenta() == idCuentaSeleccionada) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Una cuenta no puede ser su propia cuenta padre.",
+                            "Advertencia",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+
+                    txtCuentaPadre.requestFocus();
+                    return;
+                }
+
+                idCuentaPadre = padre.getIdCuenta();
+            }
+
+            // Get values from the form
+            String tipoSeleccionado
+                    = cmbTipo.getSelectedItem().toString();
+
+            String clasificacionSeleccionada
+                    = cmbClasificacion.getSelectedItem().toString();
+
+            String naturalezaSeleccionada
+                    = cmbNaturaleza.getSelectedItem().toString();
+
+            // Convert type to database ENUM value
+            String tipoBD = "";
+
+            switch (tipoSeleccionado) {
+
+                case "Activo":
+                    tipoBD = "ACTIVO";
+                    break;
+
+                case "Pasivo":
+                    tipoBD = "PASIVO";
+                    break;
+
+                case "Capital":
+                    tipoBD = "CAPITAL";
+                    break;
+
+                case "Ingreso":
+                    tipoBD = "INGRESO";
+                    break;
+
+                case "Costos":
+                    tipoBD = "COSTO";
+                    break;
+
+                case "Gastos":
+                    tipoBD = "GASTO";
+                    break;
+            }
+
+            // Convert classification to database ENUM value
+            String clasificacionBD = "";
+
+            switch (clasificacionSeleccionada) {
+
+                case "Corriente":
+                    clasificacionBD = "CORRIENTE";
+                    break;
+
+                case "No corriente":
+                    clasificacionBD = "NO_CORRIENTE";
+                    break;
+
+                case "Patrimonio":
+                    clasificacionBD = "PATRIMONIO";
+                    break;
+
+                case "Resultado":
+                    clasificacionBD = "RESULTADO";
+                    break;
+            }
+
+            // Convert nature to database ENUM value
+            String naturalezaBD = "";
+
+            switch (naturalezaSeleccionada) {
+
+                case "Deudora":
+                    naturalezaBD = "DEUDORA";
+                    break;
+
+                case "Acreedora":
+                    naturalezaBD = "ACREEDORA";
+                    break;
+            }
+
+            Cuentas cuenta = new Cuentas();
+
+            cuenta.setIdCuenta(idCuentaSeleccionada);
+            cuenta.setCodigo(codigo);
+            cuenta.setNombre(nombre);
+
+            cuenta.setTipo(tipoBD);
+            cuenta.setClasificacion(clasificacionBD);
+            cuenta.setNaturaleza(naturalezaBD);
+
+            cuenta.setIdCuentaPadre(idCuentaPadre);
+
+            cuenta.setEstado(
+                    cmbEstado.getSelectedItem()
+                            .toString()
+                            .equals("Activo")
+            );
+
+            boolean resultado
+                    = controlador.editar(cuenta);
+
+            if (resultado) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Cuenta actualizada correctamente.",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                cargarTabla();
+                limpiarFormulario();
+                configurarFormularioInicial();
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No se pudo actualizar la cuenta.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al editar la cuenta:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
-    private void cmbCuentaPadreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCuentaPadreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbCuentaPadreActionPerformed
+    private void tblCuentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCuentasMouseClicked
+        int fila = tblCuentas.getSelectedRow();
+
+        if (fila == -1) {
+            return;
+        }
+
+        String codigo = tblCuentas.getValueAt(fila, 0).toString();
+
+        Cuentas cuenta = controlador.buscarPorCodigo(codigo);
+
+        if (cuenta == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo encontrar la cuenta seleccionada.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        idCuentaSeleccionada = cuenta.getIdCuenta();
+
+        // Enable fields for editing
+        habilitarFormulario();
+
+        // Code cannot be changed when editing
+        txtCodigo.setEnabled(false);
+
+        // Load account data
+        txtCodigo.setText(cuenta.getCodigo());
+        txtNombre.setText(cuenta.getNombre());
+
+        cmbTipo.setSelectedItem(cuenta.getTipo());
+        cmbClasificacion.setSelectedItem(cuenta.getClasificacion());
+        cmbNaturaleza.setSelectedItem(cuenta.getNaturaleza());
+
+        cmbEstado.setSelectedItem(
+                cuenta.isEstado()
+                ? "Activo"
+                : "Inactivo"
+        );
+
+        txtCuentaPadre.setText("");
+
+        if (cuenta.getIdCuentaPadre() != null) {
+
+            List<Cuentas> cuentas = controlador.listar();
+
+            for (Cuentas padre : cuentas) {
+
+                if (padre.getIdCuenta() == cuenta.getIdCuentaPadre()) {
+
+                    txtCuentaPadre.setText(
+                            padre.getCodigo()
+                    );
+
+                    break;
+                }
+            }
+        }
+
+        btnEditar.setEnabled(true);
+        btnGuardar.setEnabled(false);
+    }//GEN-LAST:event_tblCuentasMouseClicked
+
+    private void btnLimpiarActionPerformed2(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed2
+        limpiarFormulario();
+
+        configurarFormularioInicial();
+
+        btnEditar.setEnabled(false);
+        btnGuardar.setEnabled(false);
+    }//GEN-LAST:event_btnLimpiarActionPerformed2
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+       
+        String texto = txtBuscar.getText().trim();
+
+        if (texto.isEmpty()) {
+            cargarTabla();
+            return;
+        }
+
+        List<Cuentas> cuentas = controlador.buscar(texto);
+
+        DefaultTableModel modelo
+                = (DefaultTableModel) tblCuentas.getModel();
+
+        modelo.setRowCount(0);
+
+        for (Cuentas cuenta : cuentas) {
+
+            String cuentaPadre = "";
+
+            if (cuenta.getIdCuentaPadre() != null) {
+                cuentaPadre
+                        = String.valueOf(cuenta.getIdCuentaPadre());
+            }
+
+            modelo.addRow(new Object[]{
+                cuenta.getCodigo(),
+                cuenta.getNombre(),
+                cuenta.getTipo(),
+                cuenta.getClasificacion(),
+                cuenta.getNaturaleza(),
+                cuentaPadre,
+                cuenta.isEstado() ? "Activo" : "Inactivo"
+            });
+        }
+
+        if (cuentas.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontraron cuentas."
+            );
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -537,23 +1175,19 @@ private void estilarBoton(JButton btn, String texto, Color bg, Color fg, Color b
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cmbClasificacion;
-    private javax.swing.JComboBox<String> cmbCuentaPadre;
     private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JComboBox<String> cmbNaturaleza;
-    private javax.swing.JComboBox<String> cmbRoles;
+    private javax.swing.JComboBox<RolReporte> cmbRoles;
     private javax.swing.JComboBox<String> cmbTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel lblBuscar;
     private javax.swing.JLabel lblClasificacion;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblCuentaPadre;
-    private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblNaturaleza;
     private javax.swing.JLabel lblNombre;
@@ -562,6 +1196,7 @@ private void estilarBoton(JButton btn, String texto, Color bg, Color fg, Color b
     private javax.swing.JTable tblCuentas;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtCuentaPadre;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
