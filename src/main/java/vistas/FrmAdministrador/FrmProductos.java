@@ -4,13 +4,31 @@
  */
 package vistas.FrmAdministrador;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
+
 
 /**
  *
  * @author maril
  */
+
+
+
 public class FrmProductos extends javax.swing.JPanel {
 
     /**
@@ -18,8 +36,11 @@ public class FrmProductos extends javax.swing.JPanel {
      */
     public FrmProductos(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
         initComponents();
+        initializeComponents();
+       
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,29 +53,29 @@ public class FrmProductos extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         btnNuevo = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblCodigo = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        lblNombre = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
         txtDescripcion = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        lblUnidadMedida = new javax.swing.JLabel();
         cmbUnidadMedida = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
+        lblPrecioCompra = new javax.swing.JLabel();
         txtPrecioCompra = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
+        lblPrecioVenta = new javax.swing.JLabel();
         txtPrecioVenta = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
+        lblStockMinimo = new javax.swing.JLabel();
         txtExistencia = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
+        lblExistencia = new javax.swing.JLabel();
         txtStockMinimo = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        lblEstado = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnDesactivar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProductos = new javax.swing.JTable();
+        cmbEstado = new javax.swing.JComboBox<>();
 
         jLabel1.setText("PERIODOS CONTABLES");
 
@@ -64,38 +85,36 @@ public class FrmProductos extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("PRODUCTOS");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText(" Código: ");
+        lblCodigo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblCodigo.setText(" Código: ");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("Nombre:");
+        lblNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNombre.setText("Nombre:");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setText("Descripción: ");
+        lblDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDescripcion.setText("Descripción: ");
 
         txtDescripcion.addActionListener(this::txtDescripcionActionPerformed);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel6.setText(" Unidad medida: ");
+        lblUnidadMedida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblUnidadMedida.setText(" Unidad medida: ");
 
-        cmbUnidadMedida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbUnidadMedida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unidad", "Caja", "Paquete", "Docena", "Kilogramo", "Gramo", "Litro", "Metro" }));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel7.setText("Precio compra: ");
+        lblPrecioCompra.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblPrecioCompra.setText("Precio compra: ");
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel8.setText("Precio venta: ");
+        lblPrecioVenta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblPrecioVenta.setText("Precio venta: ");
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel9.setText(" Stock mínimo: ");
+        lblStockMinimo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblStockMinimo.setText(" Stock mínimo: ");
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel10.setText("Existencia:");
+        lblExistencia.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblExistencia.setText("Existencia:");
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel11.setText(" Estado:  ");
-
-        jLabel12.setText("jLabel12");
+        lblEstado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblEstado.setText(" Estado:  ");
 
         btnGuardar.setText("GUARDAR");
 
@@ -116,6 +135,8 @@ public class FrmProductos extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tblProductos);
 
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,17 +144,17 @@ public class FrmProductos extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
+                    .addComponent(lblUnidadMedida)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel3)))
-                    .addComponent(jLabel7)
+                            .addComponent(lblNombre)
+                            .addComponent(lblDescripcion)
+                            .addComponent(lblCodigo)))
+                    .addComponent(lblPrecioCompra)
                     .addComponent(btnNuevo)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11))
+                    .addComponent(lblExistencia)
+                    .addComponent(lblEstado))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
@@ -142,7 +163,6 @@ public class FrmProductos extends javax.swing.JPanel {
                                 .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtNombre)
                                 .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
-                            .addComponent(jLabel12)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(txtExistencia, javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,12 +170,13 @@ public class FrmProductos extends javax.swing.JPanel {
                                     .addComponent(cmbUnidadMedida, javax.swing.GroupLayout.Alignment.LEADING, 0, 118, Short.MAX_VALUE))
                                 .addGap(27, 27, 27)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel9))
+                                    .addComponent(lblPrecioVenta)
+                                    .addComponent(lblStockMinimo))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtPrecioVenta)
-                                    .addComponent(txtStockMinimo, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)))))
+                                    .addComponent(txtStockMinimo, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)))
+                            .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(btnGuardar)
@@ -183,38 +204,38 @@ public class FrmProductos extends javax.swing.JPanel {
                 .addComponent(jLabel2)
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(lblCodigo)
                     .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
+                    .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(lblDescripcion)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                    .addComponent(lblUnidadMedida)
                     .addComponent(cmbUnidadMedida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblPrecioCompra, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtPrecioCompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel8)
+                        .addComponent(lblPrecioVenta)
                         .addComponent(txtPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
+                    .addComponent(lblStockMinimo)
                     .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtStockMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
-                .addGap(30, 30, 30)
+                    .addComponent(lblExistencia))
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12))
-                .addGap(35, 35, 35)
+                    .addComponent(lblEstado)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -225,6 +246,408 @@ public class FrmProductos extends javax.swing.JPanel {
                 .addContainerGap(9, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void initializeComponents() {
+
+        // =========================================================
+        // FORMULARIO PRINCIPAL
+        // =========================================================
+        this.setLayout(new BorderLayout(0, 15));
+        this.setBackground(new Color(241, 245, 249));
+
+        // =========================================================
+        // ENCABEZADO
+        // =========================================================
+        JPanel pnlHeader = new JPanel(new BorderLayout());
+        pnlHeader.setBackground(new Color(15, 23, 42));
+        pnlHeader.setBorder(
+                BorderFactory.createEmptyBorder(18, 25, 18, 25)
+        );
+
+        jLabel1.setText("PRODUCTOS");
+        jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        jLabel1.setForeground(Color.WHITE);
+
+        pnlHeader.add(jLabel1, BorderLayout.WEST);
+
+        // =========================================================
+        // PANEL PRINCIPAL
+        // =========================================================
+        JPanel pnlMain = new JPanel(new BorderLayout(0, 15));
+        pnlMain.setBackground(new Color(241, 245, 249));
+        pnlMain.setBorder(
+                BorderFactory.createEmptyBorder(0, 20, 20, 20)
+        );
+
+        // =========================================================
+        // PANEL DE DATOS
+        // =========================================================
+        JPanel pnlDatos = new JPanel(new GridBagLayout());
+        pnlDatos.setBackground(Color.WHITE);
+        pnlDatos.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(226, 232, 240)
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                20, 20, 20, 20
+                        )
+                )
+        );
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(7, 10, 7, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+
+        // =========================================================
+        // ESTILO DE ETIQUETAS
+        // =========================================================
+        JLabel[] etiquetas = {
+            lblCodigo,
+            lblNombre,
+            lblDescripcion,
+            lblUnidadMedida,
+            lblPrecioCompra,
+            lblPrecioVenta,
+            lblExistencia,
+            lblStockMinimo,
+            lblEstado
+        };
+
+        for (JLabel etiqueta : etiquetas) {
+            etiqueta.setFont(
+                    new Font("Segoe UI", Font.BOLD, 13)
+            );
+            etiqueta.setForeground(
+                    new Color(71, 85, 105)
+            );
+        }
+
+        // =========================================================
+        // ESTILO DE CAMPOS DE TEXTO
+        // =========================================================
+        JTextField[] campos = {
+            txtCodigo,
+            txtNombre,
+            txtDescripcion,
+            txtPrecioCompra,
+            txtPrecioVenta,
+            txtExistencia,
+            txtStockMinimo
+        };
+
+        for (JTextField campo : campos) {
+
+            campo.setFont(
+                    new Font("Segoe UI", Font.PLAIN, 14)
+            );
+
+            campo.setBackground(
+                    new Color(248, 250, 252)
+            );
+
+            campo.setBorder(
+                    BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(
+                                    new Color(203, 213, 225)
+                            ),
+                            BorderFactory.createEmptyBorder(
+                                    5, 8, 5, 8
+                            )
+                    )
+            );
+
+            campo.setPreferredSize(
+                    new Dimension(220, 38)
+            );
+        }
+
+        // =========================================================
+        // ESTILO DE COMBOS
+        // =========================================================
+        cmbUnidadMedida.setFont(
+                new Font("Segoe UI", Font.PLAIN, 14)
+        );
+
+        cmbUnidadMedida.setBackground(Color.WHITE);
+
+        cmbUnidadMedida.setPreferredSize(
+                new Dimension(220, 38)
+        );
+        
+
+        cmbEstado.setFont(
+                new Font("Segoe UI", Font.PLAIN, 14)
+        );
+
+        cmbEstado.setBackground(Color.WHITE);
+
+        cmbEstado.setPreferredSize(
+                new Dimension(220, 38)
+        );
+
+        // =========================================================
+        // FILA 1 - CÓDIGO / NOMBRE
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        pnlDatos.add(lblCodigo, gbc);
+
+        gbc.gridx = 1;
+        pnlDatos.add(txtCodigo, gbc);
+
+        gbc.gridx = 2;
+        pnlDatos.add(lblNombre, gbc);
+
+        gbc.gridx = 3;
+        pnlDatos.add(txtNombre, gbc);
+
+        // =========================================================
+        // FILA 2 - DESCRIPCIÓN / UNIDAD
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        pnlDatos.add(lblDescripcion, gbc);
+
+        gbc.gridx = 1;
+        pnlDatos.add(txtDescripcion, gbc);
+
+        gbc.gridx = 2;
+        pnlDatos.add(lblUnidadMedida, gbc);
+
+        gbc.gridx = 3;
+        pnlDatos.add(cmbUnidadMedida, gbc);
+
+        // =========================================================
+        // FILA 3 - PRECIO COMPRA / PRECIO VENTA
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        pnlDatos.add(lblPrecioCompra, gbc);
+
+        gbc.gridx = 1;
+        pnlDatos.add(txtPrecioCompra, gbc);
+
+        gbc.gridx = 2;
+        pnlDatos.add(lblPrecioVenta, gbc);
+
+        gbc.gridx = 3;
+        pnlDatos.add(txtPrecioVenta, gbc);
+
+        // =========================================================
+        // FILA 4 - EXISTENCIA / STOCK MÍNIMO
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        pnlDatos.add(lblExistencia, gbc);
+
+        gbc.gridx = 1;
+        pnlDatos.add(txtExistencia, gbc);
+
+        gbc.gridx = 2;
+        pnlDatos.add(lblStockMinimo, gbc);
+
+        gbc.gridx = 3;
+        pnlDatos.add(txtStockMinimo, gbc);
+
+        // =========================================================
+        // FILA 5 - ESTADO
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        pnlDatos.add(lblEstado, gbc);
+
+        gbc.gridx = 1;
+        pnlDatos.add(cmbEstado, gbc);
+
+        // =========================================================
+        // BOTONES
+        // =========================================================
+        JPanel pnlBotones = new JPanel(
+                new FlowLayout(
+                        FlowLayout.LEFT,
+                        10,
+                        5
+                )
+        );
+
+        pnlBotones.setBackground(Color.WHITE);
+
+        estilarBoton(btnNuevo, "nuevo");
+        estilarBoton(btnGuardar, "guardar");
+        estilarBoton(btnModificar, "editar");
+        
+
+        pnlBotones.add(btnNuevo);
+        pnlBotones.add(btnGuardar);
+        pnlBotones.add(btnModificar);
+        pnlBotones.add(btnDesactivar);
+
+        // =========================================================
+        // PANEL SUPERIOR: DATOS + BOTONES
+        // =========================================================
+        JPanel pnlSuperior = new JPanel(
+                new BorderLayout(0, 10)
+        );
+
+        pnlSuperior.setBackground(
+                new Color(241, 245, 249)
+        );
+
+        pnlSuperior.add(
+                pnlDatos,
+                BorderLayout.CENTER
+        );
+
+        pnlSuperior.add(
+                pnlBotones,
+                BorderLayout.SOUTH
+        );
+
+        // =========================================================
+        // TABLA
+        // =========================================================
+        tblProductos.setFont(
+                new Font("Segoe UI", Font.PLAIN, 13)
+        );
+
+        tblProductos.setRowHeight(36);
+
+        tblProductos.setSelectionBackground(
+                new Color(224, 242, 254)
+        );
+
+        tblProductos.setSelectionForeground(
+                new Color(15, 23, 42)
+        );
+
+        tblProductos.setShowVerticalLines(false);
+
+        tblProductos.setGridColor(
+                new Color(226, 232, 240)
+        );
+
+        // CABECERA DE LA TABLA
+        tblProductos.getTableHeader().setFont(
+                new Font("Segoe UI", Font.BOLD, 12)
+        );
+
+        tblProductos.getTableHeader().setBackground(
+                new Color(241, 245, 249)
+        );
+
+        tblProductos.getTableHeader().setForeground(
+                new Color(71, 85, 105)
+        );
+
+        tblProductos.getTableHeader().setPreferredSize(
+                new Dimension(0, 38)
+        );
+
+        // =========================================================
+        // PANEL DE TABLA
+        // =========================================================
+        JPanel pnlTabla = new JPanel(
+                new BorderLayout(0, 10)
+        );
+
+        pnlTabla.setBackground(Color.WHITE);
+
+        pnlTabla.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(226, 232, 240)
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                10, 10, 10, 10
+                        )
+                )
+        );
+
+        /*
+     * IMPORTANTE:
+     * Aquí NO pongo jScrollPane3 porque no sabemos
+     * cómo se llama tu JScrollPane.
+     *
+     * Si el JScrollPane se llama jScrollPane1,
+     * entonces usa:
+     *
+     * pnlTabla.add(jScrollPane1, BorderLayout.CENTER);
+         */
+        // =========================================================
+        // AGREGAR TODO AL FORMULARIO
+        // =========================================================
+        pnlMain.add(
+                pnlSuperior,
+                BorderLayout.NORTH
+        );
+
+        pnlMain.add(
+                pnlTabla,
+                BorderLayout.CENTER
+        );
+
+        this.add(
+                pnlHeader,
+                BorderLayout.NORTH
+        );
+
+        this.add(
+                pnlMain,
+                BorderLayout.CENTER
+        );
+    }
+
+    private void estilarBoton(JButton boton, String tipo) {
+
+        boton.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        boton.setPreferredSize(new Dimension(110, 38));
+
+        switch (tipo) {
+
+            case "nuevo":
+                boton.setBackground(new Color(241, 245, 249));
+                boton.setForeground(new Color(30, 41, 59));
+                boton.setBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(203, 213, 225)
+                        )
+                );
+                break;
+
+            case "guardar":
+                boton.setBackground(new Color(37, 99, 235));
+                boton.setForeground(Color.WHITE);
+                boton.setBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(29, 78, 216)
+                        )
+                );
+                break;
+
+            case "editar":
+                boton.setBackground(new Color(217, 119, 6));
+                boton.setForeground(Color.WHITE);
+                boton.setBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(180, 83, 9)
+                        )
+                );
+                break;
+
+            case "limpiar":
+                boton.setBackground(new Color(100, 116, 139));
+                boton.setForeground(Color.WHITE);
+                boton.setBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(71, 85, 105)
+                        )
+                );
+                break;
+        }
+    }
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
@@ -240,20 +663,20 @@ public class FrmProductos extends javax.swing.JPanel {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JComboBox<String> cmbUnidadMedida;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblDescripcion;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblExistencia;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblPrecioCompra;
+    private javax.swing.JLabel lblPrecioVenta;
+    private javax.swing.JLabel lblStockMinimo;
+    private javax.swing.JLabel lblUnidadMedida;
     private javax.swing.JTable tblProductos;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtDescripcion;

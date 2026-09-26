@@ -17,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import vistas.FrmAdministrador.FrmCuentas;
+import vistas.FrmAdministrador.FrmDashboard;
 import vistas.FrmAdministrador.FrmEmpresa;
 import vistas.FrmAdministrador.FrmImpuestos;
 import vistas.FrmAdministrador.FrmPeriodos;
@@ -95,6 +96,7 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
         btnConfiguracion.setText("Configuracion");
 
         btnDashboard.setText("Dashboard");
+        btnDashboard.addActionListener(this::btnDashboardActionPerformed);
 
         btnPeríodosContables.setText("Períodos contables");
         btnPeríodosContables.addActionListener(this::btnPeríodosContablesActionPerformed);
@@ -229,6 +231,13 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
 
         menuPrincipal.mostrarVentana(frmEmpresa);
     }//GEN-LAST:event_btnEmpresaActionPerformed
+
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+         FrmDashboard frmDashboard
+                = new FrmDashboard(usuario, menuPrincipal);
+
+        menuPrincipal.mostrarVentana(frmDashboard);
+    }//GEN-LAST:event_btnDashboardActionPerformed
 
     public void initializeComponents() {
         // 1. Fondo general neutro y limpio
