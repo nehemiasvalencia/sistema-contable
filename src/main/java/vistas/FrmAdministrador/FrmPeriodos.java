@@ -14,8 +14,19 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import modelos.Empresa;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
+import controladores.EmpresaController;
+import controladores.PeriodoContableController;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelos.PeriodoContable;
 
 /**
  *
@@ -23,12 +34,38 @@ import vistas.FrmMenuPrincipal;
  */
 public class FrmPeriodos extends javax.swing.JPanel {
 
+    private PeriodoContableController controlador;
+    private EmpresaController empresaController;
+
+    private PeriodoContable periodoSeleccionado = null;
+
+    private final DateTimeFormatter FORMATO_FECHA
+            = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     /**
      * Creates new form FrmPeriodos
      */
     public FrmPeriodos(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
         initComponents();
         initializeComponents();
+
+        try {
+            controlador = new PeriodoContableController();
+            empresaController = new EmpresaController();
+
+            cargarEmpresas();
+            cargarPeriodos();
+            prepararNuevo();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al conectar con la base de datos:\n"
+                    + e.getMessage(),
+                    "Error de conexión",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     /**
@@ -46,18 +83,18 @@ public class FrmPeriodos extends javax.swing.JPanel {
         cmbEmpresa = new javax.swing.JComboBox<>();
         btnGuardar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
-        btnCerrar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPeriodos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         lblFechaInicio = new javax.swing.JLabel();
-        txtFechaInicio = new javax.swing.JTextField();
         lblFechaFin = new javax.swing.JLabel();
-        txtFechaFin = new javax.swing.JTextField();
         lblEstado = new javax.swing.JLabel();
         cmbEstado = new javax.swing.JComboBox<>();
+        dateFechaInicio = new com.toedter.calendar.JDateChooser();
+        dateFechaFin = new com.toedter.calendar.JDateChooser();
 
         setName(""); // NOI18N
 
@@ -68,13 +105,20 @@ public class FrmPeriodos extends javax.swing.JPanel {
 
         lblEmpresa.setText("Empresa:");
 
-        cmbEmpresa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         btnGuardar.setText("GUARDAR");
+        btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
         btnModificar.setText("MODIFICAR");
+        btnModificar.addActionListener(this::btnModificarActionPerformed);
 
-        btnCerrar.setText("CERRAR PERÍODO");
+        btnLimpiar.setText("limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
+
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane1MouseClicked(evt);
+            }
+        });
 
         tblPeriodos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -87,6 +131,11 @@ public class FrmPeriodos extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblPeriodos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPeriodosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblPeriodos);
 
         jLabel1.setText("jLabel1");
@@ -99,7 +148,7 @@ public class FrmPeriodos extends javax.swing.JPanel {
 
         lblEstado.setText("Estado:");
 
-        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Abierto", "Cerrado" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -131,20 +180,21 @@ public class FrmPeriodos extends javax.swing.JPanel {
                                             .addComponent(lblEstado))))
                                 .addGap(56, 56, 56)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(dateFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(btnNuevo)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(btnGuardar)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btnModificar)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnCerrar))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(dateFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnNuevo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnGuardar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnModificar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnLimpiar))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
@@ -163,28 +213,439 @@ public class FrmPeriodos extends javax.swing.JPanel {
                     .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblFechaInicio)
-                    .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblFechaFin)
-                    .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dateFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblEstado)
-                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(10, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblFechaFin)
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblEstado)
+                            .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(38, 38, 38)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dateFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            if (cmbEmpresa.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debe seleccionar una empresa.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            if (txtNombre.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debe ingresar el nombre del período.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            if (dateFechaInicio.getDate() == null
+                    || dateFechaFin.getDate() == null) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debe seleccionar la fecha de inicio y la fecha de finalización.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            LocalDate fechaInicio = dateFechaInicio.getDate()
+                    .toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+
+            LocalDate fechaFin = dateFechaFin.getDate()
+                    .toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+
+            if (fechaFin.isBefore(fechaInicio)) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "La fecha de finalización no puede ser anterior a la fecha de inicio.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            Empresa empresa = (Empresa) cmbEmpresa.getSelectedItem();
+
+            String nombre = txtNombre.getText().trim();
+            String estado = cmbEstado.getSelectedItem().toString().toUpperCase();
+
+            PeriodoContable periodo = new PeriodoContable();
+
+            periodo.setIdEmpresa(empresa.getIdEmpresa());
+            periodo.setNombre(nombre);
+            periodo.setFechaInicio(fechaInicio);
+            periodo.setFechaFin(fechaFin);
+            periodo.setEstado(estado);
+
+            controlador.insertar(periodo);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Período contable guardado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            cargarPeriodos();
+            prepararNuevo();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al guardar el período:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ocurrió un error:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+
+        if (periodoSeleccionado == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe seleccionar un período de la tabla para modificar.",
+                    "Validación",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        try {
+
+            if (cmbEmpresa.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debe seleccionar una empresa.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                cmbEmpresa.requestFocus();
+                return;
+            }
+
+            Empresa empresa = (Empresa) cmbEmpresa.getSelectedItem();
+
+            String nombre = txtNombre.getText().trim();
+
+            if (nombre.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "El nombre del período es obligatorio.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                txtNombre.requestFocus();
+                return;
+            }
+
+            if (dateFechaInicio.getDate() == null
+                    || dateFechaFin.getDate() == null) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debe seleccionar la fecha de inicio y la fecha de finalización.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            LocalDate fechaInicio = dateFechaInicio.getDate()
+                    .toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+
+            LocalDate fechaFin = dateFechaFin.getDate()
+                    .toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+
+            if (fechaFin.isBefore(fechaInicio)) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "La fecha de finalización no puede ser anterior a la fecha de inicio.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            if (cmbEstado.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debe seleccionar el estado del período.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            periodoSeleccionado.setIdEmpresa(empresa.getIdEmpresa());
+            periodoSeleccionado.setNombre(nombre);
+            periodoSeleccionado.setFechaInicio(fechaInicio);
+            periodoSeleccionado.setFechaFin(fechaFin);
+
+            String estado = cmbEstado.getSelectedItem()
+                    .toString()
+                    .toUpperCase();
+
+            periodoSeleccionado.setEstado(estado);
+
+            controlador.actualizar(periodoSeleccionado);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Período contable modificado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            prepararNuevo();
+            cargarPeriodos();
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al modificar el período:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void limpiarCampos() {
+
+        cmbEmpresa.setSelectedIndex(-1);
+
+        txtNombre.setText("");
+
+        dateFechaInicio.setDate(null);
+        dateFechaFin.setDate(null);
+
+        cmbEstado.setSelectedIndex(-1);
+
+        periodoSeleccionado = null;
+
+        tblPeriodos.clearSelection();
+    }
+
+    private void tblPeriodosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPeriodosMouseClicked
+        int fila = tblPeriodos.getSelectedRow();
+
+        if (fila == -1) {
+            return;
+        }
+
+        try {
+
+            int idPeriodo
+                    = Integer.parseInt(
+                            tblPeriodos.getValueAt(fila, 0).toString()
+                    );
+
+            periodoSeleccionado
+                    = controlador.buscarPorId(idPeriodo);
+
+            if (periodoSeleccionado == null) {
+                return;
+            }
+
+            // Buscar empresa correspondiente
+            for (int i = 0; i < cmbEmpresa.getItemCount(); i++) {
+
+                Empresa empresa = cmbEmpresa.getItemAt(i);
+
+                if (empresa.getIdEmpresa()
+                        == periodoSeleccionado.getIdEmpresa()) {
+
+                    cmbEmpresa.setSelectedIndex(i);
+                    break;
+                }
+            }
+
+            txtNombre.setText(
+                    periodoSeleccionado.getNombre()
+            );
+
+            dateFechaInicio.setDate(
+                    java.sql.Date.valueOf(
+                            periodoSeleccionado.getFechaInicio()
+                    )
+            );
+
+            dateFechaFin.setDate(
+                    java.sql.Date.valueOf(
+                            periodoSeleccionado.getFechaFin()
+                    )
+            );
+            
+            String estado = periodoSeleccionado.getEstado();
+
+            if (estado != null) {
+                estado = estado.substring(0, 1).toUpperCase()
+                        + estado.substring(1).toLowerCase();
+            }
+
+            cmbEstado.setSelectedItem(estado);
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al seleccionar el período:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_tblPeriodosMouseClicked
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarCampos();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jScrollPane1MouseClicked
+
+    private void prepararNuevo() {
+
+        periodoSeleccionado = null;
+
+        txtNombre.setText("");
+        dateFechaInicio.setDate(null);
+        dateFechaFin.setDate(null);
+
+        if (cmbEstado.getItemCount() > 0) {
+            cmbEstado.setSelectedItem("Abierto");
+        }
+
+        tblPeriodos.clearSelection();
+
+        txtNombre.requestFocus();
+    }
+
+    private void cargarEmpresas() {
+
+        try {
+
+            cmbEmpresa.removeAllItems();
+
+            List<Empresa> empresas = empresaController.listar();
+
+            for (Empresa empresa : empresas) {
+                cmbEmpresa.addItem(empresa);
+            }
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al cargar las empresas:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void cargarPeriodos() {
+
+        try {
+
+            List<PeriodoContable> periodos = controlador.listar();
+
+            llenarTabla(periodos);
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al cargar los períodos:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void llenarTabla(List<PeriodoContable> periodos) {
+
+        DefaultTableModel modelo = new DefaultTableModel(
+                new Object[]{
+                    "ID",
+                    "Empresa",
+                    "Nombre",
+                    "Fecha inicio",
+                    "Fecha fin",
+                    "Estado"
+                },
+                0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        for (PeriodoContable periodo : periodos) {
+
+            String estado;
+
+            if (periodo.getEstado().equals("ABIERTO")) {
+                estado = "Abierto";
+            } else {
+                estado = "Cerrado";
+            }
+
+            modelo.addRow(new Object[]{
+                periodo.getIdPeriodo(),
+                periodo.getIdEmpresa(),
+                periodo.getNombre(),
+                periodo.getFechaInicio(),
+                periodo.getFechaFin(),
+                estado
+            });
+        }
+
+        tblPeriodos.setModel(modelo);
+    }
 
     private void initializeComponents() {
 
@@ -320,8 +781,8 @@ public class FrmPeriodos extends javax.swing.JPanel {
         JComponent[] inputs = {
             cmbEmpresa,
             txtNombre,
-            txtFechaInicio,
-            txtFechaFin,
+            dateFechaInicio,
+            dateFechaFin,
             cmbEstado
 
         };
@@ -415,8 +876,7 @@ public class FrmPeriodos extends javax.swing.JPanel {
         gbc.gridy = 1;
         gbc.weightx = 0.5;
 
-        pnlForm.add(
-                txtFechaInicio,
+        pnlForm.add(dateFechaInicio,
                 gbc
         );
 
@@ -433,8 +893,7 @@ public class FrmPeriodos extends javax.swing.JPanel {
         gbc.gridy = 1;
         gbc.weightx = 0.5;
 
-        pnlForm.add(
-                txtFechaFin,
+        pnlForm.add(dateFechaFin,
                 gbc
         );
 
@@ -501,11 +960,9 @@ public class FrmPeriodos extends javax.swing.JPanel {
                 new Color(180, 83, 9)
         );
 
-
         pnlBotones.add(btnNuevo);
         pnlBotones.add(btnGuardar);
         pnlBotones.add(btnModificar);
-        
 
         // ------------------------------------------------------------
         // Agregar botones debajo de los campos
@@ -542,7 +999,6 @@ public class FrmPeriodos extends javax.swing.JPanel {
                 );
 
         pnlTablaContainer.setOpaque(false);
-
 
         // ============================================================
         // 13. CONFIGURACIÓN DE LA TABLA
@@ -628,7 +1084,7 @@ public class FrmPeriodos extends javax.swing.JPanel {
                 java.awt.BorderLayout.CENTER
         );
     }
-    
+
     private void estilarBoton(
             JButton btn,
             String texto,
@@ -683,12 +1139,14 @@ public class FrmPeriodos extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
-    private javax.swing.JComboBox<String> cmbEmpresa;
+    private javax.swing.JComboBox<Empresa> cmbEmpresa;
     private javax.swing.JComboBox<String> cmbEstado;
+    private com.toedter.calendar.JDateChooser dateFechaFin;
+    private com.toedter.calendar.JDateChooser dateFechaInicio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblEmpresa;
@@ -698,8 +1156,6 @@ public class FrmPeriodos extends javax.swing.JPanel {
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTable tblPeriodos;
-    private javax.swing.JTextField txtFechaFin;
-    private javax.swing.JTextField txtFechaInicio;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

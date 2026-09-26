@@ -91,7 +91,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
         btnEditar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbEmpresas = new javax.swing.JTable();
         cmbEstado = new javax.swing.JComboBox<>();
 
         jButton4.setText("CERRAR PERÍODO");
@@ -144,7 +144,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbEmpresas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -155,12 +155,12 @@ public class FrmEmpresa extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbEmpresas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tbEmpresasMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tbEmpresas);
 
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
 
@@ -382,8 +382,8 @@ public class FrmEmpresa extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jScrollPane1MouseClicked
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int fila = jTable1.getSelectedRow();
+    private void tbEmpresasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbEmpresasMouseClicked
+        int fila = tbEmpresas.getSelectedRow();
 
         if (fila == -1) {
             return;
@@ -392,7 +392,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
         try {
 
             int idEmpresa = Integer.parseInt(
-                    jTable1.getValueAt(fila, 0).toString()
+                    tbEmpresas.getValueAt(fila, 0).toString()
             );
 
             Empresa empresa = controlador.buscarPorId(idEmpresa);
@@ -435,7 +435,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_tbEmpresasMouseClicked
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         if (idEmpresaSeleccionada == 0) {
@@ -538,7 +538,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
             }
         };
 
-        jTable1.setModel(modelo);
+        tbEmpresas.setModel(modelo);
     }
 
     private void cargarEmpresas() {
@@ -548,7 +548,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
             List<Empresa> empresas = controlador.listar();
 
             DefaultTableModel modelo
-                    = (DefaultTableModel) jTable1.getModel();
+                    = (DefaultTableModel) tbEmpresas.getModel();
 
             modelo.setRowCount(0);
 
@@ -595,7 +595,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
 
         cmbEstado.setSelectedIndex(0);
 
-        jTable1.clearSelection();
+        tbEmpresas.clearSelection();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -609,7 +609,6 @@ public class FrmEmpresa extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblActividad;
     private javax.swing.JLabel lblCorreo;
     private javax.swing.JLabel lblDireccion;
@@ -618,6 +617,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPais;
     private javax.swing.JLabel lblTelefono;
+    private javax.swing.JTable tbEmpresas;
     private javax.swing.JTextField txtActividad;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDireccion;
