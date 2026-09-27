@@ -21,17 +21,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
-
-
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelos.Producto;
 
 /**
  *
  * @author maril
  */
-
-
-
 public class FrmProductos extends javax.swing.JPanel {
+
+    private ProductoController controlador;
+    private int idProductoSeleccionado = 0;
 
     /**
      * Creates new form FrmProductos
@@ -39,10 +42,223 @@ public class FrmProductos extends javax.swing.JPanel {
     public FrmProductos(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
         initComponents();
         initializeComponents();
-       
+
+        try {
+            controlador = new ProductoController();
+            configurarTabla();
+            cargarTabla();
+            limpiarFormulario();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al conectar con productos:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+
     }
 
-    
+    private void configurarTabla() {
+
+        DefaultTableModel modelo = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "ID",
+                    "Código",
+                    "Nombre",
+                    "Descripción",
+                    "Unidad",
+                    "Precio compra",
+                    "Precio venta",
+                    "Existencia",
+                    "Stock mínimo",
+                    "Estado"
+                }
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        tblProductos.setModel(modelo);
+        tblProductos.setDefaultEditor(Object.class, null);
+    }
+
+    private void cargarTabla() {
+
+        try {
+
+            List<Producto> productos = controlador.listar();
+
+            DefaultTableModel modelo
+                    = (DefaultTableModel) tblProductos.getModel();
+
+            modelo.setRowCount(0);
+
+            for (Producto producto : productos) {
+
+                modelo.addRow(new Object[]{
+                    producto.getIdProducto(),
+                    producto.getCodigo(),
+                    producto.getNombre(),
+                    producto.getDescripcion(),
+                    producto.getUnidadMedida(),
+                    producto.getPrecioCompra(),
+                    producto.getPrecioVenta(),
+                    producto.getExistencia(),
+                    producto.getStockMinimo(),
+                    producto.isEstado() ? "Activo" : "Inactivo"
+                });
+            }
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al cargar los productos:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void limpiarFormulario() {
+
+        idProductoSeleccionado = 0;
+
+        txtCodigo.setText("");
+        txtNombre.setText("");
+        txtDescripcion.setText("");
+        txtPrecioCompra.setText("");
+        txtPrecioVenta.setText("");
+        txtExistencia.setText("");
+        txtStockMinimo.setText("");
+
+        if (cmbUnidadMedida.getItemCount() > 0) {
+            cmbUnidadMedida.setSelectedIndex(0);
+        }
+
+        if (cmbEstado.getItemCount() > 0) {
+            cmbEstado.setSelectedIndex(0);
+        }
+
+        tblProductos.clearSelection();
+
+        txtCodigo.requestFocus();
+    }
+
+    private Producto obtenerProductoFormulario() {
+
+        Producto producto = new Producto();
+
+        producto.setIdProducto(idProductoSeleccionado);
+
+        producto.setCodigo(txtCodigo.getText().trim());
+        producto.setNombre(txtNombre.getText().trim());
+        producto.setDescripcion(txtDescripcion.getText().trim());
+
+        producto.setUnidadMedida(
+                cmbUnidadMedida.getSelectedItem().toString()
+        );
+
+        producto.setPrecioCompra(
+                Double.parseDouble(txtPrecioCompra.getText().trim())
+        );
+
+        producto.setPrecioVenta(
+                Double.parseDouble(txtPrecioVenta.getText().trim())
+        );
+
+        producto.setExistencia(
+                Double.parseDouble(txtExistencia.getText().trim())
+        );
+
+        producto.setStockMinimo(
+                Double.parseDouble(txtStockMinimo.getText().trim())
+        );
+
+        producto.setEstado(
+                cmbEstado.getSelectedItem().toString().equals("Activo")
+        );
+
+        return producto;
+    }
+
+    private boolean validarFormulario() {
+
+        if (txtCodigo.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese el código del producto."
+            );
+            txtCodigo.requestFocus();
+            return false;
+        }
+
+        if (txtNombre.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese el nombre del producto."
+            );
+            txtNombre.requestFocus();
+            return false;
+        }
+
+        if (txtPrecioCompra.getText().trim().isEmpty()
+                || txtPrecioVenta.getText().trim().isEmpty()
+                || txtExistencia.getText().trim().isEmpty()
+                || txtStockMinimo.getText().trim().isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Complete los campos numéricos."
+            );
+
+            return false;
+        }
+
+        try {
+
+            double precioCompra
+                    = Double.parseDouble(txtPrecioCompra.getText().trim());
+
+            double precioVenta
+                    = Double.parseDouble(txtPrecioVenta.getText().trim());
+
+            double existencia
+                    = Double.parseDouble(txtExistencia.getText().trim());
+
+            double stockMinimo
+                    = Double.parseDouble(txtStockMinimo.getText().trim());
+
+            if (precioCompra < 0
+                    || precioVenta < 0
+                    || existencia < 0
+                    || stockMinimo < 0) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Los valores numéricos no pueden ser negativos."
+                );
+
+                return false;
+            }
+
+        } catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Los precios, existencia y stock mínimo deben ser números válidos."
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,7 +290,7 @@ public class FrmProductos extends javax.swing.JPanel {
         lblEstado = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
-        btnDesactivar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProductos = new javax.swing.JTable();
         cmbEstado = new javax.swing.JComboBox<>();
@@ -119,10 +335,13 @@ public class FrmProductos extends javax.swing.JPanel {
         lblEstado.setText(" Estado:  ");
 
         btnGuardar.setText("GUARDAR");
+        btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
         btnModificar.setText("MODIFICAR");
+        btnModificar.addActionListener(this::btnModificarActionPerformed);
 
-        btnDesactivar.setText("DESACTIVAR");
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
         tblProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -135,6 +354,11 @@ public class FrmProductos extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProductosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblProductos);
 
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
@@ -185,7 +409,7 @@ public class FrmProductos extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnDesactivar))
+                                .addComponent(btnLimpiar))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(51, 51, 51)
                                 .addComponent(btnModificar)))))
@@ -242,7 +466,7 @@ public class FrmProductos extends javax.swing.JPanel {
                     .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDesactivar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(9, Short.MAX_VALUE))
@@ -482,7 +706,7 @@ public class FrmProductos extends javax.swing.JPanel {
         pnlBotones.add(btnNuevo);
         pnlBotones.add(btnGuardar);
         pnlBotones.add(btnModificar);
-        pnlBotones.add(btnDesactivar);
+        pnlBotones.add(btnLimpiar);
 
         // =========================================================
         // PANEL SUPERIOR: DATOS + BOTONES
@@ -565,16 +789,7 @@ public class FrmProductos extends javax.swing.JPanel {
                 )
         );
 
-        /*
-     * IMPORTANTE:
-     * Aquí NO pongo jScrollPane3 porque no sabemos
-     * cómo se llama tu JScrollPane.
-     *
-     * Si el JScrollPane se llama jScrollPane1,
-     * entonces usa:
-     *
-     * pnlTabla.add(jScrollPane1, BorderLayout.CENTER);
-         */
+        pnlTabla.add(jScrollPane1, BorderLayout.CENTER);
         // =========================================================
         // AGREGAR TODO AL FORMULARIO
         // =========================================================
@@ -650,17 +865,175 @@ public class FrmProductos extends javax.swing.JPanel {
     }
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
+        limpiarFormulario();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void txtDescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDescripcionActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (!validarFormulario()) {
+            return;
+        }
+
+        if (idProductoSeleccionado != 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El producto seleccionado ya existe.\n"
+                    + "Utilice MODIFICAR para actualizarlo."
+            );
+
+            return;
+        }
+
+        try {
+
+            Producto producto = obtenerProductoFormulario();
+
+            controlador.insertar(producto);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Producto guardado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            cargarTabla();
+            limpiarFormulario();
+
+        } catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Verifique los valores numéricos.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al guardar el producto:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void tblProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductosMouseClicked
+        int fila = tblProductos.getSelectedRow();
+
+        if (fila == -1) {
+            return;
+        }
+
+        try {
+
+            int id = Integer.parseInt(
+                    tblProductos.getValueAt(fila, 0).toString()
+            );
+
+            Producto producto = controlador.buscarPorId(id);
+
+            if (producto == null) {
+                return;
+            }
+
+            idProductoSeleccionado = producto.getIdProducto();
+
+            txtCodigo.setText(producto.getCodigo());
+            txtNombre.setText(producto.getNombre());
+            txtDescripcion.setText(producto.getDescripcion());
+
+            cmbUnidadMedida.setSelectedItem(
+                    producto.getUnidadMedida()
+            );
+
+            txtPrecioCompra.setText(
+                    String.valueOf(producto.getPrecioCompra())
+            );
+
+            txtPrecioVenta.setText(
+                    String.valueOf(producto.getPrecioVenta())
+            );
+
+            txtExistencia.setText(
+                    String.valueOf(producto.getExistencia())
+            );
+
+            txtStockMinimo.setText(
+                    String.valueOf(producto.getStockMinimo())
+            );
+
+            cmbEstado.setSelectedItem(
+                    producto.isEstado() ? "Activo" : "Inactivo"
+            );
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al cargar el producto:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_tblProductosMouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        if (idProductoSeleccionado == 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un producto de la tabla para modificar."
+            );
+
+            return;
+        }
+
+        if (!validarFormulario()) {
+            return;
+        }
+
+        try {
+
+            Producto producto = obtenerProductoFormulario();
+
+            controlador.actualizar(producto);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Producto actualizado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            cargarTabla();
+            limpiarFormulario();
+
+        } catch (SQLException e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al modificar el producto:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarFormulario();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDesactivar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cmbEstado;

@@ -4,6 +4,17 @@
  */
 package vistas.FrmAdministrador;
 
+import controladores.ImpuestoController;
+import java.math.BigDecimal;
+import modelos.Impuesto;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
 
@@ -13,11 +24,35 @@ import vistas.FrmMenuPrincipal;
  */
 public class FrmImpuestos extends javax.swing.JPanel {
 
+    private ImpuestoController controlador;
+
+    private int idImpuestoSeleccionado = 0;
+
     /**
      * Creates new form FrmImpuestos
      */
     public FrmImpuestos(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
         initComponents();
+
+        try {
+
+            controlador = new ImpuestoController();
+
+        } catch (SQLException ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al conectar con la base de datos:\n"
+                    + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            return;
+        }
+
+        cargarTabla();
+        limpiarCampos();
     }
 
     /**
@@ -33,20 +68,26 @@ public class FrmImpuestos extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        lblNombre = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        lblCodigo = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        lblEstado = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
+        txtDescripcion = new javax.swing.JTextField();
+        btnNuevo = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblImpuestos = new javax.swing.JTable();
         cmbEstado = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        txtPorcentaje = new javax.swing.JTextField();
+        lblFechaFin = new javax.swing.JLabel();
+        dcFechaInicio = new com.toedter.calendar.JDateChooser();
+        dcFechaFin = new com.toedter.calendar.JDateChooser();
+        lblFechaInicio = new javax.swing.JLabel();
 
         jButton1.setText("NUEVO");
 
@@ -57,79 +98,113 @@ public class FrmImpuestos extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("IMPUESTOS  ");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Nombre: ");
+        lblNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNombre.setText("Nombre: ");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText(" Código:");
+        lblCodigo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblCodigo.setText(" Código:");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("Estado:");
+        lblEstado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblEstado.setText("Estado:");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel6.setText("Descripción:");
+        lblDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDescripcion.setText("Descripción:");
 
-        jButton2.setText("NUEVO");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        btnNuevo.setText("NUEVO");
+        btnNuevo.addActionListener(this::btnNuevoActionPerformed);
 
-        jButton4.setText("GUARDAR");
+        btnGuardar.setText("GUARDAR");
+        btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
-        jButton6.setText("MODIFICAR");
+        btnModificar.setText("MODIFICAR");
+        btnModificar.addActionListener(this::btnModificarActionPerformed);
 
-        jButton7.setText("DESACTIVAR");
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblImpuestos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Codigo", "Nombre", "Porcentaje", "Fecha inicio", "Fecha fin ", "Descripcion", "Estado"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblImpuestos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblImpuestosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblImpuestos);
 
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
+        jLabel2.setText("Porcentaje");
+
+        lblFechaFin.setText("Fecha Fin:");
+
+        lblFechaInicio.setText("Fecha Inicio:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(119, 119, 119)
+                .addComponent(lblDescripcion)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(35, 35, 35))
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jButton2)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jButton4)
-                                    .addGap(31, 31, 31)
-                                    .addComponent(jButton6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jButton7))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel6)))
+                            .addComponent(lblCodigo)
+                            .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(72, 72, 72)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblEstado)
+                            .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblFechaFin)
+                                    .addComponent(lblFechaInicio))
+                                .addGap(56, 56, 56)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(dcFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(dcFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel2)
+                            .addComponent(lblNombre)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(147, 147, 147)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnNuevo)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnGuardar)
+                                .addGap(31, 31, 31)
+                                .addComponent(btnModificar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnLimpiar))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(190, 190, 190)
                         .addComponent(jLabel1)))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(287, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,56 +212,271 @@ public class FrmImpuestos extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(jLabel1)
                 .addGap(31, 31, 31)
-                .addComponent(jLabel2)
+                .addComponent(lblNombre)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(lblCodigo)
+                    .addComponent(lblEstado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel6)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblFechaInicio)
+                    .addComponent(dcFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblFechaFin)
+                    .addComponent(dcFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(lblDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGap(52, 52, 52))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        limpiarCampos();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        String nombre = txtNombre.getText().trim();
+        String codigo = txtCodigo.getText().trim();
+        String descripcion = txtDescripcion.getText().trim();
+        String porcentajeTexto = txtPorcentaje.getText().trim(); // Campo nuevo
+
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el nombre del impuesto.", "Validación", JOptionPane.WARNING_MESSAGE);
+            txtNombre.requestFocus();
+            return;
+        }
+
+        if (codigo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el código del impuesto.", "Validación", JOptionPane.WARNING_MESSAGE);
+            txtCodigo.requestFocus();
+            return;
+        }
+
+        // Validar Porcentaje
+        if (porcentajeTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el porcentaje del impuesto.", "Validación", JOptionPane.WARNING_MESSAGE);
+            txtPorcentaje.requestFocus();
+            return;
+        }
+
+        BigDecimal porcentaje;
+        try {
+            porcentaje = new BigDecimal(porcentajeTexto);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ingrese un porcentaje válido (ej. 13.00).", "Validación", JOptionPane.WARNING_MESSAGE);
+            txtPorcentaje.requestFocus();
+            return;
+        }
+
+        // Validar Fecha Inicio (Ejemplo usando java.time.LocalDate)
+        LocalDate fechaInicio;
+        if (dcFechaInicio.getDate() == null) { // Si usas JDateChooser
+            JOptionPane.showMessageDialog(this, "Seleccione la fecha de inicio.", "Validación", JOptionPane.WARNING_MESSAGE);
+            return;
+        } else {
+            fechaInicio = dcFechaInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+
+        // Fecha Fin (Opcional)
+        LocalDate fechaFin = null;
+        if (dcFechaFin.getDate() != null) {
+            fechaFin = dcFechaFin.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+
+        boolean estado = cmbEstado.getSelectedItem().toString().equals("Activo");
+
+        Impuesto impuesto = new Impuesto(
+                nombre,
+                codigo,
+                descripcion,
+                porcentaje,
+                fechaInicio,
+                fechaFin,
+                estado
+        );
+
+        try {
+            controlador.insertar(impuesto);
+            JOptionPane.showMessageDialog(this, "Impuesto guardado correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            cargarTabla();
+            limpiarCampos();
+        } catch (IllegalArgumentException ex) {
+            // Captura las validaciones lanzadas por el ImpuestoController
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Validación de Negocio", JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "No se pudo guardar el impuesto.\n\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void tblImpuestosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblImpuestosMouseClicked
+
+        int fila = tblImpuestos.getSelectedRow();
+
+        if (fila == -1) {
+            return;
+        }
+
+        idImpuestoSeleccionado = Integer.parseInt(tblImpuestos.getValueAt(fila, 0).toString());
+        txtNombre.setText(tblImpuestos.getValueAt(fila, 1).toString());
+        txtCodigo.setText(tblImpuestos.getValueAt(fila, 2).toString());
+        txtPorcentaje.setText(tblImpuestos.getValueAt(fila, 3).toString());
+
+        Object fInicio = tblImpuestos.getValueAt(fila, 4);
+        if (fInicio != null) {
+            dcFechaInicio.setDate(java.sql.Date.valueOf(fInicio.toString()));
+        }
+
+        Object fFin = tblImpuestos.getValueAt(fila, 5);
+        dcFechaFin.setDate((fFin != null && !fFin.toString().isEmpty()) ? java.sql.Date.valueOf(fFin.toString()) : null);
+
+        Object descripcion = tblImpuestos.getValueAt(fila, 6);
+        txtDescripcion.setText(descripcion == null ? "" : descripcion.toString());
+
+        cmbEstado.setSelectedItem(tblImpuestos.getValueAt(fila, 7).toString());
+
+    }//GEN-LAST:event_tblImpuestosMouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        if (idImpuestoSeleccionado <= 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un impuesto de la tabla.", "Validación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String nombre = txtNombre.getText().trim();
+        String codigo = txtCodigo.getText().trim();
+        String descripcion = txtDescripcion.getText().trim();
+        String porcentajeTexto = txtPorcentaje.getText().trim();
+
+        if (nombre.isEmpty() || codigo.isEmpty() || porcentajeTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Complete los campos obligatorios.", "Validación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        BigDecimal porcentaje;
+        try {
+            porcentaje = new BigDecimal(porcentajeTexto);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ingrese un porcentaje válido.", "Validación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        LocalDate fechaInicio = dcFechaInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate fechaFin = (dcFechaFin.getDate() != null)
+                ? dcFechaFin.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                : null;
+
+        boolean estado = cmbEstado.getSelectedItem().toString().equals("Activo");
+
+        Impuesto impuesto = new Impuesto(
+                idImpuestoSeleccionado,
+                nombre,
+                codigo,
+                descripcion,
+                porcentaje,
+                fechaInicio,
+                fechaFin,
+                estado
+        );
+
+        try {
+            controlador.actualizar(impuesto);
+            JOptionPane.showMessageDialog(this, "Impuesto modificado correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            cargarTabla();
+            limpiarCampos();
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Validación de Negocio", JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "No se pudo modificar el impuesto.\n\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarCampos();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void cargarTabla() {
+
+        try {
+            List<Impuesto> lista = controlador.listar();
+            DefaultTableModel modelo = (DefaultTableModel) tblImpuestos.getModel();
+            modelo.setRowCount(0);
+
+            for (Impuesto impuesto : lista) {
+                modelo.addRow(new Object[]{
+                    impuesto.getIdImpuesto(),
+                    impuesto.getNombre(),
+                    impuesto.getCodigo(),
+                    impuesto.getPorcentaje(),
+                    impuesto.getFechaInicio(),
+                    impuesto.getFechaFin() != null ? impuesto.getFechaFin() : "",
+                    impuesto.getDescripcion(),
+                    impuesto.isEstado() ? "Activo" : "Inactivo"
+                });
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los impuestos:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarCampos() {
+
+        txtNombre.setText("");
+        txtCodigo.setText("");
+        txtDescripcion.setText("");
+
+        cmbEstado.setSelectedItem("Activo");
+
+        idImpuestoSeleccionado = 0;
+
+        txtNombre.requestFocus();
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cmbEstado;
+    private com.toedter.calendar.JDateChooser dcFechaFin;
+    private com.toedter.calendar.JDateChooser dcFechaInicio;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblDescripcion;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblFechaFin;
+    private javax.swing.JLabel lblFechaInicio;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JTable tblImpuestos;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtDescripcion;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPorcentaje;
     // End of variables declaration//GEN-END:variables
 }
