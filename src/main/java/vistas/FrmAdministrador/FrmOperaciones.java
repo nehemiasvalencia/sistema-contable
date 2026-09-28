@@ -4,6 +4,8 @@
  */
 package vistas.FrmAdministrador;
 
+import modelos.PeriodoContable;
+import modelos.Producto;
 import modelos.Usuario;
 import vistas.FrmMenuPrincipal;
 

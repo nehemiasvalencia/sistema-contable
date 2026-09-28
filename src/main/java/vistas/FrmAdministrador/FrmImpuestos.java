@@ -1008,8 +1008,8 @@ public class FrmImpuestos extends javax.swing.JPanel {
             for (Impuesto impuesto : lista) {
                 modelo.addRow(new Object[]{
                     impuesto.getIdImpuesto(),
-                    impuesto.getNombre(),
                     impuesto.getCodigo(),
+                    impuesto.getNombre(),
                     impuesto.getPorcentaje(),
                     impuesto.getFechaInicio(),
                     impuesto.getFechaFin() != null ? impuesto.getFechaFin() : "",

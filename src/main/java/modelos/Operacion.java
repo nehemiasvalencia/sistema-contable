@@ -3,7 +3,7 @@ package modelos;
 import java.time.LocalDate;
 
 /**
- * 
+ * Modelo que representa una operación contable.
  *
  * @author Nehemias Valencia
  */
