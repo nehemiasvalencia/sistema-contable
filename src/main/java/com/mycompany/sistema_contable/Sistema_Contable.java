@@ -1,28 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 package com.mycompany.sistema_contable;
 
-import conexion.Conexion;
-import java.sql.Connection;
-import java.sql.SQLException;
-import org.mindrot.jbcrypt.BCrypt;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import vistas.FrmLogin;
 
 /**
- *
- * @author Nehemias Valencia
+ * Punto de entrada principal para el Sistema Contable.
+ * Universidad Católica de El Salvador (UNICAES).
  */
 public class Sistema_Contable {
 
     public static void main(String[] args) {
-        String password = "Admin123";
+        // Configurar apariencia visual moderna
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ignored) {
+            // Mantener Look and Feel por defecto del sistema operativo
+        }
 
-        String hash = BCrypt.hashpw(
-                password,
-                BCrypt.gensalt(10)
-        );
-
-        System.out.println("Password: " + password);
-        System.out.println("Hash: " + hash);
+        // Iniciar interfaz gráfica de Login en el hilo de eventos de Swing
+        SwingUtilities.invokeLater(() -> {
+            FrmLogin frmLogin = new FrmLogin();
+            frmLogin.setLocationRelativeTo(null);
+            frmLogin.setVisible(true);
+        });
     }
 }

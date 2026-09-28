@@ -252,4 +252,23 @@ public class ProductoDao {
 
         return productos;
     }
+
+    /**
+     * Inventario final = existencia × precio unitario de compra (sin ISR).
+     */
+    public double calcularValorInventario() throws SQLException {
+        String sql = """
+            SELECT COALESCE(SUM(existencia * precio_compra), 0) AS valor
+            FROM productos
+            WHERE estado = TRUE
+        """;
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return Math.round(rs.getDouble("valor") * 100.0) / 100.0;
+            }
+        }
+        return 0.0;
+    }
 }

@@ -23,10 +23,12 @@ import vistas.FrmAdministrador.FrmImpuestos;
 import vistas.FrmAdministrador.FrmOperaciones;
 import vistas.FrmAdministrador.FrmPeriodos;
 import vistas.FrmAdministrador.FrmProductos;
+import vistas.FrmAdministrador.FrmUsuarios;
+import vistas.FrmAdministrador.FrmLibroDiario;
+import vistas.FrmAdministrador.FrmLibroMayor;
+import vistas.FrmAdministrador.FrmEstadosFinancieros;
 import vistas.FrmMenuPrincipal;
 import vistas.FrmLogin;
-import vistas.FrmAdministrador.FrmUsuarios;
-import vistas.FrmAdministrador.FrmProductos;
 
 /**
  *
@@ -83,17 +85,19 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
         btnCuentas.setText("Catalago de cuentas");
         btnCuentas.addActionListener(this::btnCuentasActionPerformed);
 
-        btnAsientos.setText("Libro diario");
+        btnAsientos.setText("Libro Diario");
+        btnAsientos.addActionListener(this::btnAsientosActionPerformed);
 
         btnProductos.setText("Productos");
         btnProductos.addActionListener(this::btnProductosActionPerformed);
 
-        btnReportes.setText("Reportes");
+        btnReportes.setText("Estados Financieros");
+        btnReportes.addActionListener(this::btnReportesActionPerformed);
 
         btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.addActionListener(this::btnCerrarSesionActionPerformed);
 
-        btnOperaciones.setText("Operaciones");
+        btnOperaciones.setText("Libro Mayor");
         btnOperaciones.addActionListener(this::btnOperacionesActionPerformed);
 
         btnConfiguracion.setText("Configuracion");
@@ -107,7 +111,8 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
         btnImpuestos.setText("Impuestos");
         btnImpuestos.addActionListener(this::btnImpuestosActionPerformed);
 
-        brnHistorial.setText("Historial");
+        brnHistorial.setText("Historial / Mayor");
+        brnHistorial.addActionListener(this::btnOperacionesActionPerformed);
 
         btnEmpresa.setText("Empresa");
         btnEmpresa.addActionListener(this::btnEmpresaActionPerformed);
@@ -242,12 +247,20 @@ public class FrmMenuAdmin extends javax.swing.JPanel {
         menuPrincipal.mostrarVentana(frmDashboard);
     }//GEN-LAST:event_btnDashboardActionPerformed
 
-    private void btnOperacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOperacionesActionPerformed
-        FrmOperaciones frmOperaciones
-                = new FrmOperaciones(usuario, menuPrincipal);
+    private void btnOperacionesActionPerformed(java.awt.event.ActionEvent evt) {
+        FrmLibroMayor frm = new FrmLibroMayor(usuario, menuPrincipal);
+        menuPrincipal.mostrarVentana(frm);
+    }
 
-        menuPrincipal.mostrarVentana(frmOperaciones);
-    }//GEN-LAST:event_btnOperacionesActionPerformed
+    private void btnAsientosActionPerformed(java.awt.event.ActionEvent evt) {
+        FrmLibroDiario frm = new FrmLibroDiario(usuario, menuPrincipal);
+        menuPrincipal.mostrarVentana(frm);
+    }
+
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {
+        FrmEstadosFinancieros frm = new FrmEstadosFinancieros(usuario, menuPrincipal);
+        menuPrincipal.mostrarVentana(frm);
+    }
 
     public void initializeComponents() {
         // 1. Fondo general neutro y limpio
