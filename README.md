@@ -6,19 +6,9 @@
 ---
 
 ## 👥 Integrantes del Equipo de Desarrollo
-* Hugo Emerson Gochez Arevalo
-* Hermenegildo Antonio Herrera Gonzalez
-* Franklin Bladimir Hernandez Barrera
-* Mayron Abraham Aguilar Lemus
-* Daniel Enrique Mejia Martínez
-* Denis Omar Rivera Monroy
-* Stanley Edenilson Jacobo Arevalo
-* William Alfredo Marroquin Barrera
-* Julio Alexander Martinez Rodriguez
-* Hugo Ernesto Bernal Ortiz
-* Manuel Adaly Medina Aguirre
-* Jose Antonio Martinez Rodriguez
-* Cristian Omar Arriola
+* Jefferson Stuar Quezada Rodriguez
+* Lenin Nehemias Vasquez Valencia
+* Marilyn Yulissa Orellana Villanueva
 
 ---
 
