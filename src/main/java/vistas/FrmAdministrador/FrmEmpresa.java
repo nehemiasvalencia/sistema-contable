@@ -6,9 +6,23 @@ package vistas.FrmAdministrador;
 
 import controladores.EmpresaController;
 import controladores.PaisController;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.sql.SQLException;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import modelos.Empresa;
 import modelos.Pais;
@@ -32,6 +46,7 @@ public class FrmEmpresa extends javax.swing.JPanel {
     public FrmEmpresa(Usuario usuario, FrmMenuPrincipal menuPrincipal) {
 
         initComponents();
+        initializeComponents();
 
         try {
 
@@ -57,6 +72,622 @@ public class FrmEmpresa extends javax.swing.JPanel {
             );
         }
     }
+
+    private void initializeComponents() {
+
+        // =========================================================
+        // FORMULARIO PRINCIPAL
+        // =========================================================
+        this.setLayout(new BorderLayout(0, 15));
+        this.setBackground(new Color(241, 245, 249));
+
+        // =========================================================
+        // ENCABEZADO
+        // =========================================================
+        JPanel pnlHeader = new JPanel(new BorderLayout());
+
+        pnlHeader.setBackground(
+                new Color(15, 23, 42)
+        );
+
+        pnlHeader.setBorder(
+                BorderFactory.createEmptyBorder(
+                        18, 25, 18, 25
+                )
+        );
+
+        jLabel1.setText("EMPRESAS");
+
+        jLabel1.setFont(
+                new Font("Segoe UI", Font.BOLD, 20)
+        );
+
+        jLabel1.setForeground(Color.WHITE);
+
+        pnlHeader.add(
+                jLabel1,
+                BorderLayout.WEST
+        );
+
+        // =========================================================
+        // PANEL PRINCIPAL
+        // =========================================================
+        JPanel pnlMain = new JPanel(
+                new BorderLayout(0, 15)
+        );
+
+        pnlMain.setBackground(
+                new Color(241, 245, 249)
+        );
+
+        pnlMain.setBorder(
+                BorderFactory.createEmptyBorder(
+                        0, 20, 20, 20
+                )
+        );
+
+        // =========================================================
+        // PANEL DE DATOS
+        // =========================================================
+        JPanel pnlDatos = new JPanel(
+                new GridBagLayout()
+        );
+
+        pnlDatos.setBackground(Color.WHITE);
+
+        pnlDatos.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(226, 232, 240)
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                20, 20, 20, 20
+                        )
+                )
+        );
+
+        GridBagConstraints gbc
+                = new GridBagConstraints();
+
+        gbc.insets
+                = new Insets(7, 10, 7, 10);
+
+        gbc.fill
+                = GridBagConstraints.HORIZONTAL;
+
+        gbc.weightx = 1.0;
+
+        // =========================================================
+        // ESTILO DE ETIQUETAS
+        // =========================================================
+        JLabel[] etiquetas = {
+            lblNombre,
+            lblPais,
+            lblNIT,
+            lblNRC,
+            lblTelefono,
+            lblCorreo,
+            lblDireccion,
+            lblActividad,
+            jLabel10
+        };
+
+        for (JLabel etiqueta : etiquetas) {
+
+            etiqueta.setFont(
+                    new Font(
+                            "Segoe UI",
+                            Font.BOLD,
+                            13
+                    )
+            );
+
+            etiqueta.setForeground(
+                    new Color(71, 85, 105)
+            );
+        }
+
+        // =========================================================
+        // CAMPOS DE TEXTO
+        // =========================================================
+        JTextField[] campos = {
+            txtNombre,
+            txtNIT,
+            txtNRC,
+            txtTelefono,
+            txtCorreo,
+            txtDireccion,
+            txtActividad
+        };
+
+        for (JTextField campo : campos) {
+
+            campo.setFont(
+                    new Font(
+                            "Segoe UI",
+                            Font.PLAIN,
+                            14
+                    )
+            );
+
+            campo.setBackground(
+                    new Color(248, 250, 252)
+            );
+
+            campo.setBorder(
+                    BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(
+                                    new Color(203, 213, 225)
+                            ),
+                            BorderFactory.createEmptyBorder(
+                                    5, 8, 5, 8
+                            )
+                    )
+            );
+
+            campo.setPreferredSize(
+                    new Dimension(220, 38)
+            );
+        }
+
+        // =========================================================
+        // COMBO PAÍS
+        // =========================================================
+        cmbPais.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.PLAIN,
+                        14
+                )
+        );
+
+        cmbPais.setBackground(Color.WHITE);
+
+        cmbPais.setPreferredSize(
+                new Dimension(220, 38)
+        );
+
+        // =========================================================
+        // COMBO ESTADO
+        // =========================================================
+        cmbEstado.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.PLAIN,
+                        14
+                )
+        );
+
+        cmbEstado.setBackground(Color.WHITE);
+
+        cmbEstado.setPreferredSize(
+                new Dimension(150, 38)
+        );
+
+        // =========================================================
+        // FILA 1 - NOMBRE
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        pnlDatos.add(
+                lblNombre,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
+
+        pnlDatos.add(
+                txtNombre,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
+
+        // =========================================================
+        // FILA 2 - PAÍS / NIT
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+
+        pnlDatos.add(
+                lblPais,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        pnlDatos.add(
+                cmbPais,
+                gbc
+        );
+
+        gbc.gridx = 2;
+
+        pnlDatos.add(
+                lblNIT,
+                gbc
+        );
+
+        gbc.gridx = 3;
+
+        pnlDatos.add(
+                txtNIT,
+                gbc
+        );
+
+        // =========================================================
+        // FILA 3 - NRC / TELÉFONO
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+
+        pnlDatos.add(
+                lblNRC,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        pnlDatos.add(
+                txtNRC,
+                gbc
+        );
+
+        gbc.gridx = 2;
+
+        pnlDatos.add(
+                lblTelefono,
+                gbc
+        );
+
+        gbc.gridx = 3;
+
+        pnlDatos.add(
+                txtTelefono,
+                gbc
+        );
+
+        // =========================================================
+        // FILA 4 - CORREO
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+
+        pnlDatos.add(
+                lblCorreo,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
+
+        pnlDatos.add(
+                txtCorreo,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
+
+        // =========================================================
+        // FILA 5 - DIRECCIÓN
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+
+        pnlDatos.add(
+                lblDireccion,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
+
+        pnlDatos.add(
+                txtDireccion,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
+
+        // =========================================================
+        // FILA 6 - ACTIVIDAD ECONÓMICA
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+
+        pnlDatos.add(
+                lblActividad,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
+
+        pnlDatos.add(
+                txtActividad,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
+
+        // =========================================================
+        // FILA 7 - ESTADO
+        // =========================================================
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+
+        pnlDatos.add(
+                jLabel10,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        pnlDatos.add(
+                cmbEstado,
+                gbc
+        );
+
+        // =========================================================
+        // BOTONES
+        // =========================================================
+        JPanel pnlBotones = new JPanel(
+                new FlowLayout(
+                        FlowLayout.LEFT,
+                        10,
+                        5
+                )
+        );
+
+        pnlBotones.setBackground(Color.WHITE);
+
+        estilarBoton(
+                btnNuevo,
+                "nuevo"
+        );
+
+        estilarBoton(
+                btnGuardar,
+                "guardar"
+        );
+
+        estilarBoton(
+                btnEditar,
+                "editar"
+        );
+
+        estilarBoton(
+                btnLimpiar,
+                "limpiar"
+        );
+
+        pnlBotones.add(btnNuevo);
+        pnlBotones.add(btnGuardar);
+        pnlBotones.add(btnEditar);
+        pnlBotones.add(btnLimpiar);
+
+        // =========================================================
+        // PANEL SUPERIOR
+        // =========================================================
+        JPanel pnlSuperior = new JPanel(
+                new BorderLayout(0, 10)
+        );
+
+        pnlSuperior.setBackground(
+                new Color(241, 245, 249)
+        );
+
+        pnlSuperior.add(
+                pnlDatos,
+                BorderLayout.CENTER
+        );
+
+        pnlSuperior.add(
+                pnlBotones,
+                BorderLayout.SOUTH
+        );
+
+        // =========================================================
+        // TABLA
+        // =========================================================
+        tbEmpresas.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.PLAIN,
+                        13
+                )
+        );
+
+        tbEmpresas.setRowHeight(36);
+
+        tbEmpresas.setSelectionBackground(
+                new Color(224, 242, 254)
+        );
+
+        tbEmpresas.setSelectionForeground(
+                new Color(15, 23, 42)
+        );
+
+        tbEmpresas.setShowVerticalLines(false);
+
+        tbEmpresas.setGridColor(
+                new Color(226, 232, 240)
+        );
+
+        // =========================================================
+        // CABECERA DE TABLA
+        // =========================================================
+        tbEmpresas.getTableHeader().setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        12
+                )
+        );
+
+        tbEmpresas.getTableHeader().setBackground(
+                new Color(241, 245, 249)
+        );
+
+        tbEmpresas.getTableHeader().setForeground(
+                new Color(71, 85, 105)
+        );
+
+        tbEmpresas.getTableHeader().setPreferredSize(
+                new Dimension(0, 38)
+        );
+
+        // =========================================================
+        // SCROLLPANE
+        // =========================================================
+        jScrollPane1.setBorder(
+                BorderFactory.createLineBorder(
+                        new Color(226, 232, 240)
+                )
+        );
+
+        jScrollPane1.getViewport().setBackground(
+                Color.WHITE
+        );
+
+        // =========================================================
+        // PANEL DE TABLA
+        // =========================================================
+        JPanel pnlTabla = new JPanel(
+                new BorderLayout()
+        );
+
+        pnlTabla.setBackground(Color.WHITE);
+
+        pnlTabla.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(226, 232, 240)
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                10, 10, 10, 10
+                        )
+                )
+        );
+
+        pnlTabla.add(
+                jScrollPane1,
+                BorderLayout.CENTER
+        );
+
+        // =========================================================
+        // AGREGAR AL FORMULARIO
+        // =========================================================
+        pnlMain.add(
+                pnlSuperior,
+                BorderLayout.NORTH
+        );
+
+        pnlMain.add(
+                pnlTabla,
+                BorderLayout.CENTER
+        );
+
+        this.add(
+                pnlHeader,
+                BorderLayout.NORTH
+        );
+
+        this.add(
+                pnlMain,
+                BorderLayout.CENTER
+        );
+    }
+    
+    private void estilarBoton(JButton boton, String tipo) {
+
+    boton.setFont(
+        new Font(
+            "Segoe UI",
+            Font.BOLD,
+            13
+        )
+    );
+
+    boton.setCursor(
+        new Cursor(Cursor.HAND_CURSOR)
+    );
+
+    boton.setPreferredSize(
+        new Dimension(110, 38)
+    );
+
+    switch (tipo) {
+
+        case "nuevo":
+
+            boton.setBackground(
+                new Color(241, 245, 249)
+            );
+
+            boton.setForeground(
+                new Color(30, 41, 59)
+            );
+
+            boton.setBorder(
+                BorderFactory.createLineBorder(
+                    new Color(203, 213, 225)
+                )
+            );
+
+            break;
+
+        case "guardar":
+
+            boton.setBackground(
+                new Color(37, 99, 235)
+            );
+
+            boton.setForeground(Color.WHITE);
+
+            boton.setBorder(
+                BorderFactory.createLineBorder(
+                    new Color(29, 78, 216)
+                )
+            );
+
+            break;
+
+        case "editar":
+
+            boton.setBackground(
+                new Color(217, 119, 6)
+            );
+
+            boton.setForeground(Color.WHITE);
+
+            boton.setBorder(
+                BorderFactory.createLineBorder(
+                    new Color(180, 83, 9)
+                )
+            );
+
+            break;
+
+        case "limpiar":
+
+            boton.setBackground(
+                new Color(100, 116, 139)
+            );
+
+            boton.setForeground(Color.WHITE);
+
+            boton.setBorder(
+                BorderFactory.createLineBorder(
+                    new Color(71, 85, 105)
+                )
+            );
+
+            break;
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
